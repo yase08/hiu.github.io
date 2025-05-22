@@ -1,9 +1,10 @@
 const CACHE_NAME = 'my-app-cache-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/detail/index.html', // Include the detail page
-  '/manifest.json',
+  './',
+  'favicon.ico',
+  './index.html',
+  'detail/index.html', // Include the detail page
+  'manifest.json',
   // Removed 'assets/.DS_Store', as it's a system file
   'assets/css/bootstrap/bootstrap-grid.css',
   // Removed 'assets/css/bootstrap/bootstrap-grid.css.map',
