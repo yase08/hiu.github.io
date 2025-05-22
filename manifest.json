@@ -1,0 +1,9 @@
+{
+  "name": "Pusat Edukasi Hiu Paus",
+  "short_name": "Hiu Paus Edu",
+  "description": "Aplikasi edukasi tentang Hiu Paus dan konservasinya di Teluk Saleh.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0070B8",
+  "theme_color": "#0070B8"
+}

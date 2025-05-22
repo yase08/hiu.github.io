@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Edukasi Hiu Paus</title>
+    <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        .custom-select {
+          position: relative;
+          width: 200px;
+        }
+    
+        .selected {
+          border: 1px solid #ccc;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+          background: #f9f9f9;
+        }
+    
+        .selected img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+    
+        .dropdown {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          border: 1px solid #ccc;
+          background: #fff;
+          z-index: 10;
+          display: none;
+        }
+    
+        .dropdown.active {
+          display: block;
+        }
+    
+        .dropdown .option {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+    
+        .dropdown .option:hover {
+          background: #f0f0f0;
+        }
+    
+        .dropdown .option img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body class="content position-relative">
+    <div class="container container-y container-x radius-10 margin-t-50 padding-20 position-relative"
+        style="z-index: 99;">
+        <div class="custom-select">
+            <div class="selected">
+                <img src="" alt="Selected Language">
+                <span></span>
+                <span>&#9662;</span>
+            </div>
+            <div class="dropdown"></div>
+        </div>
+        <div class="margin-b-40">
+            <div class="d-flex justify-content-center flex-wrap gap-2" id="card-container">
+                </div>
+        </div>
+    </div>
+    <div class="modal fade modal-lg justify-content-center align-items-center"
+        style="background-repeat: no-repeat; object-fit: cover; background-size: cover;"
+        id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+                <!-- <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detail Informasi</h5>
+                </div> -->
+                <div class="modal-body d-flex flex-column justify-content-center gap-5 align-items-center"
+                    id="modal-body" style="border: none;">
+                    <div class="d-flex justify-content-center flex-wrap gap-2" style="width: 1800px;"
+                        id="card-container-modal">
+                    </div>
+                </div>
+                <!--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    aria-label="Back">Back</button>-->
+            </div>
+        </div>
+        <img src="./assets/img/header.png" alt="" class="position-absolute" style="top: 0px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 250vh;">
+    </div>
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Mengimpor fungsi yang dibutuhkan dari Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, updateDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Catatan: Untuk analytics, Anda masih bisa menggunakannya, tetapi tidak terkait langsung dengan fungsionalitas database offline
+        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // Konfigurasi Firebase aplikasi web Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyAoK6hw2BEw8YcDrc02z2slV2j3Qu_3kwU", // Ganti dengan API Key Anda
+            authDomain: "teluksaleh-951ab.firebaseapp.com",
+            projectId: "teluksaleh-951ab",
+            storageBucket: "teluksaleh-951ab.appspot.com",
+            messagingSenderId: "974216375770",
+            appId: "1:974216375770:web:845ad7e1a6e0f4668f64e3",
+            measurementId: "G-DW2K13HECS"
+        };
+
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        // const analytics = getAnalytics(app); // Opsional, jika Anda membutuhkan analytics
+
+        // Inisialisasi Cloud Firestore dan dapatkan referensi ke layanan
+        const db = getFirestore(app);
+
+        // Mengaktifkan persistensi offline untuk Cloud Firestore
+        // Ini harus dipanggil sebelum operasi Firestore lainnya.
+        enableIndexedDbPersistence(db)
+            .then(() => {
+                console.log("Offline persistence enabled successfully.");
+            })
+            .catch((err) => {
+                if (err.code == 'failed-precondition') {
+                    console.warn("Offline persistence failed: Multiple tabs open or already enabled.");
+                } else if (err.code == 'unimplemented') {
+                    console.error("Offline persistence failed: Browser not supported.", err);
+                } else {
+                    console.error("Error enabling offline persistence:", err);
+                }
+            });
+
+        let datas = [
+            {
+                "id": 1,
+                "judul": "Mengenal Hiu Paus",
+                "judul_en": "Getting to Know the Whale Sharks",
+                "icon": "01.png",
+                "backgroundSubmenu": "hiu-01.png",
+                "submenu": [
+                    { id: 1, icon: "1-1.png", name: "Anatomi Tubuh", name_en: "Anatomy of the Body", type_content: "image-interactive", submenu_content: "1.jpg" },
+                    { id: 2, icon: "1-2.png", name: "Siklus Hidup", name_en: "Life Cycle", type_content: "image", background: "revisi-bg-content.png", 
+                        submenu_content: "2.png" },
+                    { id: 3, icon: "1-3.png", name: "Pertumbuhan", name_en: "Growth", type_content: "image", background: "revisi-bg-content.png", submenu_content: "pertumbuhan-id.png", submenu_content_en: "pertumbuhan-en.png"},
+                    { 
+                        id: 4,
+                        icon: "1-2.png",
+                        name: "Reproduksi",
+                        name_en: "Reproduction",
+                        background: "revisi-bg-content.png",
+                        type_content: "image",
+                        submenu_content: "reproduksi-hiu-paus-id.png",
+                        submenu_content_en: "reproduksi-hiu-paus-en.png"
+                    },
+                    {
+                        id: 5,
+                        icon: "1-2.png",
+                        name: "Tanda Unik Individu",
+                        name_en: "Unique Individual Mark",
+                        type_content: "image",
+                        background: "perilaku.png",
+                        submenu_content: "cara-makan-id.png",
+                        submenu_content_en: "cara-makan-en.png"
+                    },
+                    { 
+                        id: 6,
+                        icon: "1-2.png",
+                        name: "Tingkah Laku Makan",
+                        name_en: "Feeding Behaviour",
+                        type_content: "video",
+                        background: "perilaku.png",
+                        submenu_content: "cara-makan-id.mp4",
+                        submenu_content_en: "cara-makan.mp4"
+                    },
+                    { 
+                        id: 7,
+                        icon: "1-2.png",
+                        name: "Distribusi dan Koridor Migrasi",
+                        name_en: "Distributions and Migration Corridors",
+                        type_content: "slider",
+                        background: "revisi-bg-content.png",
+                        width: "100%",
+                        submenu_content: ["distribusi-ina.png", "distribusi-indone.png"],
+                        submenu_content_en: ["distribusi-english.png", "distribusi-eng.png"]
+                    },
+                    { 
+                        id: 8,
+                        icon: "1-2.png",
+                        name: "Populasi Global",
+                        name_en: "Global population",
+                        background: "revisi-bg-content.png",
+                        type_content: "slider",
+                        background: "revisi-bg-content.png",
+                        submenu_content: ["global_population.mp4", "populasi_glob_ind.png"],
+                        submenu_content_en: ["global_population.mp4", "populasi_glob_eng.png"]
+                    },
+                    { 
+                        id: 9, 
+                        icon: "1-2.png",
+                        name: "Fungsi Ekologi",
+                        name_en: "Ecological functions",
+                        type_content: "slider",
+                        background: "perilaku.png",
+                        submenu_content: ["funfact_ind.mp4", "fungsi_ekologi_ind.mp4"],
+                        submenu_content_en: ["funfact_eng.mp4", "fungsi_ekologi_eng.mp4"]
+                    },
+                    { id: 10, icon: "1-2.png", name: "Ancaman Global", name_en: "Global Threat", type_content: "image", background: "revisi-bg-content.png", submenu_content: "ancaman-hiu-paus.png" }
+                ]
+            },
+            {
+                "id": 2,
+                "judul": "Teluk Saleh dan Habitat Hiu Paus",
+                "judul_en" : "Saleh Bay and Whale Shark Habitat",
+                "icon": "02.png",
+                "backgroundSubmenu": "teluk-saleh.png",
+                "submenu": [
+                    { id: 1, icon: "2-4.png", name: "Sejarah", name_en: "History", background: "revisi-bg-content.png", type_content: "video", submenu_content: "3.mp4", submenu_content_en: "3.mp4" },
+                    { id: 2, icon: "2-4.png", name: "Struktur populasi hiu paus di Teluk Saleh", name_en: "Population structure of whale sharks in Saleh Bay", background: "kv-convert-01.png", type_content: "video", submenu_content: "demografi_populasi.mp4" },
+                    { id: 3, icon: "2-4.png", name: "Pola kemunculan dan tinggal", name_en: "Sighting and Residency", background: "revisi-bg-content.png", type_content: "video", submenu_content: "pola_kemunculan.mp4" },
+                    { id: 4, icon: "2-4.png", name: "Penemuan Baru Hiu Paus di Teluk Saleh", name_en: "New Whale Shark Discoveries in Teluk Saleh", background: "revisi-bg-content.png", type_content: "video", submenu_content: "discovery_curve.mp4" },
+                    { id: 5, icon: "2-4.png", name: "Koridor Pergerakan hiu paus Teluk Saleh", name_en: "Movement corridors of whale sharks in Saleh Bay", background: "revisi-bg-content.png", type_content: "image", submenu_content: "Koridor.jpg" },
+                    { id: 6, icon: "2-4.png", name: "Pola Musiman dan Habitat Hiu Paus di Teluk Saleh", name_en: "Seasonal Patterns and Habitat of Whale Sharks in Saleh Bay", background: "revisi-bg-content.png", type_content: "slider", submenu_content: ["pola-musiman.png", "pola-musiman-02.png", "pola-musiman-03.png"] },
+                    {
+                        id: 7, 
+                        icon: "2-1.png",
+                        name: "Teluk Saleh: Habitat Penting bagi Hiu Paus di Dunia",
+                        name_en: "Saleh Bay: A Globally Significant Habitat for Whale Sharks",
+                        type_content: "article",
+                        width: "60%",
+                        background: "revisi-bg-content.png",
+                        submenu_content: {
+                            judul: "Teluk Saleh dan Habitat Hius Paus",
+                            judul_en: "Saleh Bay and Whale Sharks Habitat",
+                            // informasi: "<ul style='text-align: justify; color: white; font-size: 22px;'><li><b>Pengembara Global:</b> Hiu paus ditemukan di perairan tropis dan beriklim sedang di seluruh dunia, kecuali Laut Mediterania, dengan migrasi lintas samudra sejauh lebih dari 20.000 km.</li> <li><b>Habitat: Sebagai spesies epipelagik,</b> hiu paus menghabiskan sebagian besar waktunya di perairan dangkal (<200 m), tetapi dapat menyelam hingga kedalaman 1.928 meter.</li> <li><b>Lokasi berkumpul:</b> Setiap lokasi memiliki fungsi tertentu—agregasi pesisir sebagai area pengasuhan, Galapagos sebagai titik transit betina dewasa, dan St. Helena sebagai tempat kawin.</li><li><b>Habitat makan:</b> Lokasi makan tersebar di seluruh dunia, meliputi Indonesia, Australia barat, Belize, dan agregasi terbesar di Meksiko, dengan hingga 800 individu pada musim tertentu.</li> <li><b>Faktor Migrasi:</b> Pergerakan hiu paus dipengaruhi oleh arus laut, suhu air, dan ketersediaan makanan, yang dapat terganggu oleh perubahan alami maupun aktivitas manusia.</li></ul>",
+                            // informasi_en: "<ul style='text-align: justify; color: white; font-size: 22px;'><li><b>Global Travelers:</b> Whale sharks are found in tropical and temperate waters worldwide, except for the Mediterranean Sea, and can migrate over 20,000 km across oceans.</li> <li><b>Habitat:</b> As epipelagic species, they spend most of their time in sunlit waters (<200 m), but can dive as deep as 1,928 meters.</li> <li><b>Aggregation sites:</b> Different locations serve specific roles—coastal aggregations as nurseries, Galapagos as transit points for adult females, and St. Helena as mating grounds.</li> <li><b>Feeding Hotspots:</b> Feeding locations are spread worldwide, including Indonesia, western Australia, Belize, and the largest aggregation in Mexico, with up to 800 individuals during certain seasons.</li> <li><b>Migration Drivers:</b> Their movement is influenced by ocean currents, water temperature, and food availability, which can be disrupted by natural changes or human activities.</li></ul>",
+                            gambar: "Overall-model.jpg"
+                        }
+                    },
+                    // {
+                    //     id: 2, icon: "2-2.png", name: "Informasi Ekosistem Laut", name_en: "marine ecosystem information", background: "informasi-ekosistem-laut.png", type_content: "article", submenu_content: {
+                    //         judul: "Ekosistem Laut",
+                    //         judul_en: "Marine Ecosystem",
+                    //         informasi: "Ekosistem laut adalah suatu sistem yang terdiri dari berbagai komponen biotik (makhluk hidup) dan abiotik (lingkungan fisik) yang saling berinteraksi di perairan laut. Ekosistem ini mencakup berbagai habitat, mulai dari pantai, terumbu karang, hingga zona kedalaman laut yang lebih dalam.",
+                    //         informasi_en: "A marine ecosystem is a system consisting of various biotic (living creatures) and abiotic (physical environment) components that interact with each other in marine waters. This ecosystem includes a variety of habitats, from beaches, coral reefs, to deeper zones of the ocean.",
+                    //         gambar: "ekosistem.jpg"
+                    //     }
+                    // },
+                    // {
+                    //     id: 3, icon: "2-3.png", name: "Keunikan Teluk Saleh", name_en: "The uniqueness of bay of god", background: "keunikan.png", type_content: "article", submenu_content: {
+                    //         judul: "Sejarah Teluk Saleh dan Budaya Masyarakat",
+                    //         judul_en: "History of Saleh Bay and Community Culture",
+                    //         informasi: "Teluk Saleh, yang terletak di Pulau Sumbawa, Nusa Tenggara Barat (NTB), dikenal sebagai salah satu teluk terbesar di Indonesia. Teluk ini memiliki bentuk menyerupai huruf 'U' dan kaya akan keanekaragaman hayati. Dalam sejarahnya, Teluk Saleh telah menjadi bagian penting dari kehidupan masyarakat setempat, baik dari aspek ekonomi, budaya, hingga ekologi.",
+                    //         informasi_en: "Saleh Bay, located on Sumbawa Island, West Nusa Tenggara (NTB), is known as one of the largest bays in Indonesia. This bay has a 'U' shape and is rich in biodiversity. Throughout its history, Saleh Bay has been an important part of the lives of local people, both in terms of economy, culture, and ecology.",
+                    //         gambar: "3.jpg"
+                    // }
+                ]
+            },
+            {
+                "id": 3,
+                "judul": "Konservasi dan Ekowisata",
+                "judul_en" : "Conservation and ecotourism",
+                "icon": "03.png",
+                "backgroundSubmenu": "konservasi.png",
+                "submenu": [
+                    {
+                        id: 1, icon: "3-1.png", background: "langkah2.png", name: "Upaya Konservasi Hiu Paus Di Teluk Saleh", name_en: "Whale Shark Conservation Efforts in Saleh Bay", type_content: "video", submenu_content: "upaya_konservasi.mp4"
+
+                    },
+                    {
+                        "id": 2,
+                        "icon": "3-2.png",
+                        "background": "konservasi.png",
+                        "name": "Satelit Telemetri: Inovasi Ilmiah untuk Hiu Paus",
+                        "name_en": "Satellite Telemetry: Scientific Innovations for Whale Sharks",
+                        "submenu": [
+                            {
+                                "id": 99,
+                                "icon": "3-2.png",
+                                "background": "panduan.png",
+                                "name": "Satelit Telemetri: Inovasi Ilmiah untuk Hiu Paus",
+                                "name_en": "Satellite Telemetry: Scientific Knowledge for Whale Sharks",
+                                "type_content": "video",
+                                "submenu_content": "tagging.mp4"
+                            },
+                            {
+                                "id": 100,
+                                "icon": "3-2.png",
+                                "background": "panduan.png",
+                                "name": "Yuk monitor pergerakan 'KAWAN HIU PAUS' Kak Prily dan Mbak Mei",
+                                "name_en": "Let's monitor the movements of 'WHALE SHARK FRIENDS' Sis Prily and Mbak Mei",
+                                "type_content": "iframe",
+                                "submenu_content": "https://my.wildlifecomputers.com/data/map/?id=66fc00fa8ccea408f804c426"
+                            }
+                        ]
+                    },
+                    {
+                        id: 3, icon: "3-3.png", background: "peluang.png", name: "Kode Etik Wisata Hiu Paus", name_en: "Whale Shark Tourism Code of Ethics", type_content: "slider", submenu_content: ["wisata.png", "whale-shark.png", "peran.png"]
+
+                    },
+                    {
+                        id: 4, icon: "3-3.png", background: "peluang.png", name: "Menjadi Relawan", name_en: "volunteering", type_content: "form", submenu_content: "3JZ_D3ELwOQ"
+
+                    }
+                ]
+            },
+            // {
+            //     "id": 4,
+            //     "judul": "Jejak Interaksi Pengunjung",
+            //     "judul_en": "visitor interaction footprint",
+            //     "icon": "04.png",
+            //       "submenu": [
+            //         { id: 1, icon: "4-1.png", name: "Foto", name_en: "Pictures", type_content: "image", submenu_content: "8Dt33uYPj9Y" },
+            //         {
+            //             id: 2, icon: "4-1.png", name: "Video", type_content: "article", submenu_content: {
+            //                 judul: "Ekspedisi Hiu Paus",
+            //                 informasi: "Hiu paus (Rhincodon typus) adalah spesies ikan terbesar di dunia dan menjadi salah satu makhluk laut yang paling menarik perhatian dalam penelitian ilmiah.",
+            //             }
+            //         }
+            //     ]
+            // },
+            {
+                "id": 4,
+                "judul": "Galeri Interaktif",
+                "judul_en": "Interactive Gallery",
+                "icon": "04.png",
+                "submenu": [{
+                    id: 1, icon: "4-1.png", name: "Foto", name_en: "Pictures", type_content: "image", submenu_content: "8Dt33uYPj9Y" },
+                    {
+                        id: 2, icon: "4-1.png", name: "Video", name_en: "Videos", type_content: "article", submenu_content: {
+                            judul: "Ekspedisi Hiu Paus",
+                            informasi: "Hiu paus (Rhincodon typus) adalah spesies ikan terbesar di dunia dan menjadi salah satu makhluk laut yang paling menarik perhatian dalam penelitian ilmiah.",
+                        }
+                    }]
+            },
+            // {
+            //     "id": 6,
+            //     "judul": "Sains dan Penelitian",
+            //     "judul_en" : "Sience and Research",
+            //     "icon": "06.png",
+            //     "backgroundSubmenu": "sains.png",
+            //     "submenu": [{ id: 1, icon: "6-1.png", background: "penelitian.png", name_en: "Latest Research Results", name: "Hasil Penelitian Terbaru", type_content: "image-text", submenu_content: { judul: "Sains dan Penelitian", judul_en: "Science and Research", gambar: "sains-penelitian.jpg" } },
+            //     {
+            //         id: 2, icon: "6-1.png", background: "metode-penelitian.png", name: "Metode Penelitian", name_en: "Research Methods", type_content: "image", submenu_content: "dQw4w9WgXcQ"
+            //     },
+            //     {
+            //         id: 3, icon: "6-1.png", background: "kolaborasi-global.png", name: "Kolaborasi Global", name_en: "Global Colaboration", type_content: "image", submenu_content: "dQw4w9WgXcQ"
+            //     }]
+            // },
+            {
+                "id": 5,
+                "judul": "Permainan Edukatif",
+                "judul_en": "educational games",
+                "icon": "05.png",
+                "submenu": [{ id: 2, name: "Puzzles dan Memory Games", name_en: "Puzzles and Memory Games", icon: "5-2.png", type_content: "teka-teki", submenu_content: "dQw4w9WgXcQ" }]
+            },
+            {
+                "id": 6,
+                "judul": "Survey Kepuasan Pengunjung",
+                "judul_en": "Visitor Satisfaction Survey",
+                "icon": "06.png",
+                "submenu": [{
+                    id: 1, name: "Kuesioner", name_en: "Questionnaire", icon: "5-2.png", type_content: "quiz", background: "kv-convert-01.png", submenu_content:
+                        [
+                            { 
+                                question: "Dari negara mana Anda berasal?", 
+                                question_en: "Which country are you from?", 
+                                options: ["a. Indonesia", " b. Malaysia", "c. Singapore", "d. lainnya"], 
+                                options_en: ["a. Indonesian", " b. Malaysian", "c. Singapore", "d. other"], 
+                            },
+                            { 
+                                question: "Seberapa puas Anda dengan layanan yang diberikan di Pusat Edukasi Hiu Paus?",
+                                question_en: "How satisfied are you with the services provided at the Whale Shark Education Center?", 
+                                options_en: ["a. very satified", "b. satasfied", "c. satasfied", "d. very disasfied"], 
+                                options: ["a. sangat puas", "b. puas", "c. puas", "d. sangat tidak puas"], 
+                            },
+                            { 
+                                question: "Bagaimana Anda menilai kebersihan dan pemeliharaan fasilitas? ", 
+                                question_en: "How would you rate the cleanliness and maintenance of the facilities?", 
+                                options: ["a. sangat baik", "b. baik", "c. cukup", "d. buruk", "e. sangat buruk"], 
+                                options_en: ["a. Excellend", "b. 5 good", "c. average", "d. poor", "e. very poor"],
+                            }, 
+                            { 
+                                question: "Bagaimana Anda menggambarkan sikap dan bantuan yang diberikan oleh staf?", 
+                                question_en: "How would you describe the attitude and assistance provided by the staff?", 
+                                options: ["a. sangat baik", "b. baik", "c. cukup", "d. buruk", "e. sangat buruk"], 
+                                options_en: ["a. Excellend", "b. 5 good", "c. average", "d. poor", "e. very poor"],
+                            },
+                            { 
+                                question: "Seberapa informatif dan menarik materi edukasi dan pameran yang disediakan?", 
+                                question_en: "How informative and engaging were the educational materials and exhibits provided?", 
+                                options: ["a. sangat baik", "b. baik", "c. cukup", "d. buruk", "e. sangat buruk"], 
+                                options_en: ["a. Excellend", "b. 5 good", "c. average", "d. poor", "e. very poor"],
+                            },
+                            { 
+                                question: "Apakah lokasi dan tata letak pusat edukasi ini nyaman dan mudah diakses? ", 
+                                question_en: "Was the location and layout of the education center convenient and accessible?", 
+                                options: ["a. sangat baik", "b. baik", "c. cukup", "d. buruk", "e. sangat buruk"], 
+                                options_en: ["a. Excellend", "b. 5 good", "c. average", "d. poor", "e. very poor"],
+                            },
+                            // { 
+                            //     question: "Apakah Anda memiliki saran untuk meningkatkan Pusat Edukasi Hiu Paus?", 
+                            //     question_en: "Do you have any suggestions to improve the Whale Shark Education Center? ", 
+                            //     options: ["a. sangat baik", "b. baik", "c. cukup", "d. buruk", "e. sangat buruk"], 
+                            //     options_en: ["a. Excellend", "b. 5 good", "c. average", "d. poor", "e. very poor"],
+                            // }
+                            ]
+                }]
+            },
+        ];
+        
+        // Ambil referensi ke elemen kontainer
+        const cardContainer = document.getElementById('card-container'); 
+        // Referensi dokumen untuk bahasa di Firestore (misalnya, di koleksi 'settings', dokumen 'lang')
+        const langDocRef = doc(db, 'settings', 'lang'); 
+        let currentLang = 'id'; // Variabel untuk menyimpan bahasa aktif
+        
+        // Fungsi untuk memperbarui kartu berdasarkan bahasa
+        const updateCards = (currentLang, datas) => {
+            // Bersihkan kontainer sebelum menambahkan elemen baru
+            cardContainer.innerHTML = '';
+        
+            // Loop melalui data untuk membuat kartu
+            datas.forEach(data => {
+                const card = document.createElement("div");
+                card.className = "card margin-l-30 margin-t-40 border-0 type-card";
+                card.style = `
+                    width: 18rem; 
+                    position: relative; 
+                    height: 15rem; 
+                    background: url(./assets/img/card-menu/${data.icon}); 
+                    background-size: cover; 
+                    background-position: center; 
+                    object-fit: cover; 
+                    cursor: pointer;
+                `;
+                card.onclick = () => openModal(data.id);
+        
+                // Tambahkan teks berdasarkan bahasa
+                const text = document.createElement("div");
+                text.innerHTML = currentLang === "id" ? data.judul : data.judul_en;
+                text.style = `
+                    position: relative; 
+                    padding: 33px; 
+                    line-height: 33px; 
+                    top: 24%; 
+                    font-size: 28px; 
+                    font-weight: bold;
+                `;
+                card.appendChild(text);
+                cardContainer.appendChild(card);
+            });
+        };
+        
+        // Fungsi untuk membuka modal dengan submenu
+        function openModal(cardId) {
+            // Temukan data berdasarkan cardId
+            const selectedData = datas.find(data => data.id === cardId);
+            if (!selectedData) {
+                console.error('Invalid cardId:', cardId);
+                return;
+            }
+        
+            // Ambil elemen kontainer modal
+            const cardContainerModal = document.getElementById("card-container-modal");
+            const exampleModal = document.getElementById("exampleModal");
+            
+            exampleModal.style.backgroundImage = `url(./assets/img/${selectedData.backgroundSubmenu ?? "bg-menu.png"})`
+            
+            // Bersihkan kontainer modal sebelum menambahkan elemen baru
+            cardContainerModal.innerHTML = '';
+        
+            // Periksa apakah ada submenu dan tambahkan kartu submenu ke modal
+            if (selectedData.submenu) {
+                selectedData.submenu.forEach(data => {
+                    const card = document.createElement("div");
+                    card.className = "card margin-l-10 border-0 type-card";
+                    card.style = `
+                        width: 20rem !important; 
+                        height: 20rem !important; 
+                        background: url(./assets/img/card-menu/sub-menu/${data.icon}); 
+                        background-size: cover; 
+                        background-position: center; 
+                        object-fit: cover; 
+                        cursor: pointer;
+                    `;
+            
+                    // Tambahkan teks berdasarkan bahasa tanpa pembatasan panjang
+                    const text = document.createElement("div");
+                    text.innerHTML = currentLang === "id" ? data.name : data.name_en;
+                    text.style = `
+                        position: relative; 
+                        padding-top: 30px; 
+                        line-height: 33px; 
+                        top: 24%; 
+                        font-size: 20px; 
+                        font-weight: bold;
+                    `;
+                    card.appendChild(text);
+            
+                    card.onclick = () => {
+                        sendToDisplay(selectedData.id, data.id);
+                    };
+                    cardContainerModal.appendChild(card);
+                });
+            } else {
+                // Jika tidak ada submenu, tampilkan pesan kosong
+                const noDataMessage = document.createElement("div");
+                noDataMessage.className = "text-center text-muted mt-3 ProximaNovaSemiBold text-header font-white";
+                noDataMessage.textContent = "Coming Soon";
+                cardContainerModal.appendChild(noDataMessage);
+            }
+        
+            // Tampilkan modal
+            const modal = document.getElementById('exampleModal');
+            modal.classList.remove('d-none'); // Tampilkan modal
+            modal.classList.add('d-flex'); // Tambahkan display flex
+        
+            // Inisialisasi modal Bootstrap
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        
+            // Event untuk menyembunyikan modal
+            modal.addEventListener('hidden.bs.modal', () => {
+                modal.classList.add('d-none'); // Sembunyikan modal
+                modal.classList.remove('d-flex'); // Hapus display flex
+            });
+        }
+        
+        // Pantau perubahan bahasa di Firestore
+        onSnapshot(langDocRef, (docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const langData = docSnapshot.data();
+                if (langData && langData.value) {
+                    currentLang = langData.value; // Perbarui bahasa aktif
+                    updateCards(currentLang, datas); // Perbarui kartu utama
+                }
+            } else {
+                console.log("No 'lang' document found in 'settings' collection. Defaulting to 'id'.");
+                // Set default language if not found in Firestore
+                setDoc(langDocRef, { value: 'id' });
+                currentLang = 'id';
+                updateCards(currentLang, datas);
+            }
+        });
+        
+        const selected = document.querySelector('.selected');
+        const dropdown = document.querySelector('.dropdown');
+        
+        // Data bahasa yang bersumber dari server atau dinamis
+        const languages = [
+            { value: 'id', name: 'Indonesia', flag: 'https://flagcdn.com/w40/id.png' },
+            { value: 'en', name: 'English', flag: 'https://flagcdn.com/w40/us.png' },
+        ];
+        
+        // Fungsi untuk mengisi dropdown secara dinamis
+        function populateDropdown(languages) {
+            dropdown.innerHTML = ''; // Bersihkan dropdown
+            languages.forEach(lang => {
+                const option = document.createElement('div');
+                option.classList.add('option');
+                option.setAttribute('data-value', lang.value);
+        
+                option.innerHTML = `
+                    <img src="${lang.flag}" alt="${lang.name}">
+                    <span>${lang.name}</span>
+                `;
+        
+                dropdown.appendChild(option);
+        
+                // Event listener untuk memilih bahasa
+                option.addEventListener('click', () => {
+                    selectLanguage(lang);
+                });
+            });
+        }
+        
+        // Fungsi untuk memperbarui elemen yang dipilih
+        function selectLanguage(lang) {
+            selected.querySelector('img').src = lang.flag;
+            selected.querySelector('span').textContent = lang.name;
+        
+            // Kirim data ke Firestore
+            setDoc(langDocRef, { value: lang.value })
+                .then(() => {
+                    console.log("Language updated in Firestore successfully!");
+                })
+                .catch(error => {
+                    console.error('Error sending language to Firestore:', error);
+                });
+        
+            dropdown.classList.remove('active');
+        }
+        
+        // Mendapatkan data dari Firestore saat inisialisasi
+        getDoc(langDocRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const currentLangValue = docSnapshot.data().value;
+                const selectedLang = languages.find(lang => lang.value === currentLangValue);
+                if (selectedLang) {
+                    selectLanguage(selectedLang);
+                }
+            } else {
+                // Jika dokumen 'lang' belum ada, atur nilai default
+                setDoc(langDocRef, { value: 'id' });
+                selectLanguage(languages.find(lang => lang.value === 'id'));
+            }
+        }).catch(error => {
+            console.error("Error getting initial language from Firestore:", error);
+        });
+        
+        // Toggle dropdown saat elemen terpilih diklik
+        selected.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+        
+        // Menutup dropdown saat klik di luar elemen
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select')) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Inisialisasi dropdown
+        populateDropdown(languages);
+
+        window.sendToDisplay = async function (cardId, submenuId) {
+            let selectedData = datas.find(data => data.id == cardId)?.submenu.find(item => item.id == submenuId);
+
+            if (!selectedData) {
+                selectedData = datas.find(data => data.id == 3)?.submenu.find(item => item.id == cardId)?.submenu.find(item => item.id == submenuId);
+            }
+            
+            // Jika selectedData tidak ditemukan, buat objek default
+            const dataToSend = selectedData
+                ? { id: selectedData.id, name: selectedData } // Perbaikan di sini
+                : { id: 0, name: { background: "Default.mp4", submenu_content: "default.png", type_content: "default" } };
+            
+            // Pastikan selectedData tidak null sebelum mengakses propertinya
+            if (selectedData && selectedData.type_content === undefined) {
+                // Ambil elemen kontainer modal
+                const cardContainerModal = document.getElementById("card-container-modal");
+                const exampleModal = document.getElementById("exampleModal");
+            
+                // Pastikan selectedData.backgroundSubmenu ada sebelum digunakan
+                exampleModal.style.backgroundImage = `url(./assets/img/${selectedData.backgroundSubmenu ?? "bg-menu.png"})`;
+            
+                // Bersihkan kontainer modal sebelum menambahkan elemen baru
+                cardContainerModal.innerHTML = '';
+            
+                // Pastikan selectedData.submenu ada sebelum digunakan
+                if (selectedData.submenu && selectedData.type_content == undefined) {
+                    selectedData.submenu.forEach(data => {
+                        const card = document.createElement("div");
+                        card.className = "card margin-l-10 border-0 type-card";
+                        card.style = `
+                            width: 20rem !important; 
+                            height: 20rem !important; 
+                            background: url(./assets/img/card-menu/sub-menu/${data.icon}); 
+                            background-size: cover; 
+                            background-position: center; 
+                            object-fit: cover; 
+                            cursor: pointer;
+                        `;
+            
+                        // Tambahkan teks berdasarkan bahasa tanpa pembatasan panjang
+                        const text = document.createElement("div");
+                        text.innerHTML = currentLang === "id" ? data.name : data.name_en;
+                        text.style = `
+                            position: relative; 
+                            padding-top: 30px; 
+                            line-height: 33px; 
+                            top: 24%; 
+                            font-size: 20px; 
+                            font-weight: bold;
+                        `;
+                        card.appendChild(text);
+            
+                        card.onclick = () => {
+                            sendToDisplay(selectedData.id, data.id);
+                        };
+                        cardContainerModal.appendChild(card);
+                    });
+                }
+            }
+
+            
+            const videoFoot = document.querySelector('.video-foot');
+            
+            if (videoFoot) {
+                videoFoot.remove(); // Hapus elemen yang ada
+            }
+        
+            if (selectedData) {
+                const modal = document.querySelector('.modal-content'); // Menggunakan .modal-content
+                if (!modal) {
+                    console.error('Modal element not found');
+                    return;
+                }
+                
+                // Memeriksa apakah konten yang dipilih adalah form
+                if (selectedData.type_content === "form") {
+                    // Hapus semua konten yang ada di dalam modal-content
+                    modal.innerHTML = ''; // Menghapus semua konten di dalam modal-content
+                    
+                    // Menambahkan form baru ke dalam modal
+                    modal.innerHTML = `
+                        <form id="conservation-form" style="display: flex; flex-direction: column; align-items: center; width: 650px; margin: 0 auto; padding: 20px; border-radius: 15px; background-color: rgba(0, 112, 184, 0.5);">
+                            <div style="display: flex; flex-direction: column; align-items: center; padding: 20px; width: 100%; justify-content: center;">
+                                <label for="nama" class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular">Nama</label>
+                                <input type="text" id="nama" name="nama" placeholder="Masukkan nama Anda" required 
+                                    style="width: 100%; padding: 10px; border-radius: 10px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.5);">
+                                
+                                <label for="email" class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required 
+                                    style="width: 100%; padding: 10px; border-radius: 10px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.5);">
+                                
+                                <label for="telepon" class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular">Telepon</label>
+                                <input type="text" id="telepon" name="telepon" placeholder="Masukkan telepon Anda" required 
+                                    style="width: 100%; padding: 10px; border-radius: 10px; margin-bottom: 20px; background-color: rgba(255, 255, 255, 0.5);">
+                                
+                                <button id="button-submit-partisipasi" type="button" onclick="handleFormSubmit()" style="width: 100%; padding: 10px; border-radius: 10px; background-color: #4CAF50; color: white; cursor: pointer;">
+                                    Kirim
+                                </button>
+                            </div>
+                        </form>
+                    `;
+                    
+                    const button = document.getElementById('button-submit-partisipasi');
+                    const form = document.getElementById('conservation-form');
+                    
+                    window.handleFormSubmit = () => {
+                        const formData = new FormData(form);
+                        const data = Object.fromEntries(formData.entries());
+                        
+                        button.disabled = true;
+                    
+                        // Menambahkan parameter sheetType ke data yang dikirimkan
+                        const sheetType = form.dataset.sheetType || 'general'; // Menentukan sheetType berdasarkan atribut data-sheet-type di form (default: 'general')
+                        data.sheetType = sheetType;
+                    
+                        submitFormData(data);
+                    }
+                    
+                    async function submitFormData(data) {
+                        try {
+                            const response = await fetch('https://script.google.com/macros/s/AKfycbz__rOjoaLmvh2VFbK7pGl1uKajONwIjuH_K48UqAEO_Pq1RKAREKweqpWi2sVp133J/exec', {
+                                method: 'POST',
+                                body: new URLSearchParams(data),
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            });
+                    
+                            if (response.ok) {
+                                const result = await response.json();
+                                console.log('Form submitted successfully!');
+                                // Mengganti alert() dengan modal kustom
+                                showCustomAlert('Form submitted successfully!');
+                                
+                                // Reset form setelah submit berhasil
+                                form.reset();
+                                button.disabled = false;
+                                
+                            } else {
+                                console.log('Failed to submit the form.');
+                                showCustomAlert('Failed to submit the form.');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            showCustomAlert('Error submitting form.');
+                        }
+                    }
+
+                    // Fungsi untuk menampilkan modal kustom (mengganti alert)
+                    function showCustomAlert(message) {
+                        const alertModal = document.createElement('div');
+                        alertModal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
+                        alertModal.innerHTML = `
+                            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                                <p class="text-lg font-semibold text-gray-800 mb-4">${message}</p>
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300" onclick="this.closest('.fixed').remove()">OK</button>
+                            </div>
+                        `;
+                        document.body.appendChild(alertModal);
+                    }
+                }
+        
+                if (selectedData.type_content === "quiz") {
+                    let videoControlHTML = `
+                        <div class="video-foot w-100 d-flex justify-content-center">
+                            <div style="display: flex; justify-content: center;">
+                    `;
+                
+                    // Menggunakan onSnapshot untuk mendengarkan perubahan pada dokumen Firestore
+                    onSnapshot(doc(db, "quizDisplayOptions", "currentQuiz"), (docSnapshot) => {
+                        if (docSnapshot.exists()) {
+                            const data = docSnapshot.data();
+                            loadQuestion(data);
+                        } else {
+                            console.log("No 'currentQuiz' document found in 'quizDisplayOptions' collection.");
+                        }
+                    }, (error) => {
+                        console.error("Error listening to quizDisplayOptions:", error);
+                    });
+                
+                    function loadQuestion(data) {
+                        // Hapus konten sebelumnya dengan cara yang lebih tepat
+                        const videoFoot = document.querySelector('.video-foot');
+                        if (videoFoot) {
+                            videoFoot.remove(); // Hapus elemen yang ada
+                        }
+                
+                        // Reset videoControlHTML untuk soal baru
+                        videoControlHTML = `
+                            <div class="video-foot w-100 d-flex justify-content-center">
+                                <div style="display: flex; justify-content: center;">
+                        `;
+                
+                        const currentQuiz = data;
+                
+                        if (currentQuiz.options.length === 2) {
+                            // Untuk soal dengan dua pilihan (Benar/Salah)
+                            videoControlHTML += `
+                                <div id="btnAnswerTrue" class="btn-option" style="position: relative;" onclick="sendAnswer(0, this)">
+                                    <img src="./assets/img/button.png" width="150">
+                                    <span style="position: absolute; left: 41%; top: 34%;">Benar</span>
+                                </div>
+                                <div id="btnAnswerFalse" class="btn-option" style="position: relative;" onclick="sendAnswer(1, this)">
+                                    <img src="./assets/img/button.png" width="150">
+                                    <span style="position: absolute; left: 41%; top: 34%;">Salah</span>
+                                </div>
+                            `;
+                        } else {
+                            // Untuk soal dengan banyak pilihan (A, B, C, D)
+                            currentQuiz.options.forEach((option, index) => {
+                                const letter = String.fromCharCode(65 + index); // Menghasilkan 'A', 'B', 'C', 'D', dst.
+                                videoControlHTML += `
+                                    <div id="btnOption${index}" class="btn-option" style="position: relative;" onclick="sendAnswer(${index}, this)">
+                                        <img src="./assets/img/button.png" width="150">
+                                        <span style="position: absolute; left: 41%; top: 34%;">` + letter + `</span>
+                                    </div>
+                                `;
+                            });
+                        }
+                
+                        // Tambahkan tombol Next
+                        videoControlHTML += `
+                            <button id="nextButton" type="button" style="display: none;">Next</button>
+                        `;
+                
+                        // Tambahkan kontrol video ke modal
+                        const modalContent = document.querySelector('.modal-content'); // Menggunakan .modal-content
+                        modalContent.insertAdjacentHTML('beforeend', videoControlHTML);
+                
+                       // Pasang event listener untuk tombol Next setelah elemen ditambahkan
+                        const nextButton = document.getElementById('nextButton');
+                        if (nextButton) {
+                            nextButton.addEventListener('click', async () => {
+                                // Menonaktifkan tombol Next setelah diklik
+                                nextButton.style.pointerEvents = 'none';  // Menonaktifkan interaksi dengan tombol
+                                nextButton.classList.add('disabled');    // Menambahkan kelas disabled jika perlu styling
+                        
+                                // Kirim data ke Firestore
+                                await setDoc(doc(db, 'quizNext', 'status'), { status: "next_quiz", timestamp: Date.now() })
+                                    .then(() => {
+                                        console.log("Quiz next status sent to Firestore successfully!");
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error sending quiz next status to Firestore:', error);
+                                    });
+                            });
+                        }
+                    }
+                
+                    // Fungsi untuk mengirim jawaban dan menonaktifkan tombol setelah diklik
+                    window.sendAnswer = async (answerIndex, clickedElement) => {
+                        await setDoc(doc(db, 'quiz', 'answer'), { answer: answerIndex, timestamp: Date.now() })
+                            .then(() => {
+                                console.log("Quiz answer sent to Firestore successfully!");
+                                
+                                // Menonaktifkan semua tombol setelah jawaban dipilih
+                                const allButtons = document.querySelectorAll('.btn-option');
+                                allButtons.forEach(button => {
+                                    button.style.pointerEvents = 'none';  // Menonaktifkan interaksi dengan tombol lainnya
+                                    button.classList.add('disabled');    // Menambahkan kelas disabled jika perlu styling
+                                });
+                                
+                                // Tampilkan tombol Next setelah jawaban dipilih
+                                document.getElementById('nextButton').style.display = 'block';
+                            })
+                            .catch((error) => {
+                                console.error('Error sending quiz answer to Firestore:', error);
+                            });
+                    };
+                }
+        
+                // Hanya tambahkan kontrol jika tipe konten adalah slider atau video
+                if (selectedData.type_content === "slider" || selectedData.type_content === "video") {
+                    let videoControlHTML = `
+                        <div class="video-foot w-100 d-flex justify-content-center">
+                            <div style="display: flex; justify-content: center;">
+                    `;
+                    videoControlHTML += `
+                        <div style="position: relative;" id="btnPlay">
+                            <img src="./assets/img/button.png" width="150">
+                            <span style="position: absolute; left: 41%; top: 34%;">Play</span>
+                        </div>
+                        <div style="position: relative;" id="btnPause">
+                            <img src="./assets/img/button.png" width="150">
+                            <span style="position: absolute; left: 41%; top: 34%;">Pause</span>
+                        </div>
+                        <div style="position: relative;" id="btnMute">
+                            <img src="./assets/img/button.png" width="150">
+                            <span style="position: absolute; left: 41%; top: 34%;">Mute</span>
+                        </div>
+                    `;
+        
+                    // Tambahkan tombol Next dan Prev jika tipe konten adalah slider
+                    if (selectedData.type_content === "slider") {
+                        videoControlHTML += `
+                            <div style="position: relative;" id="btnPrevSlide">
+                                <img src="./assets/img/button.png" width="150">
+                                <span style="position: absolute; left: 43px; top: 34%;">Prev Slide</span>
+                            </div>
+                            <div style="position: relative;" id="btnNextSlide">
+                                <img src="./assets/img/button.png" width="150">
+                                <span style="position: absolute; left: 43px; top: 34%;">Next Slide</span>
+                            </div>
+                        `;
+                    }
+                    
+                    videoControlHTML += `</div></div>`;
+                    const modalContent = document.querySelector('.modal-content'); // Menggunakan .modal-content
+                    modalContent.insertAdjacentHTML('beforeend', videoControlHTML);
+        
+                    // Pasang event listener kembali setelah elemen baru ditambahkan
+                    document.getElementById("btnPlay").onclick = sendPlayVideo;
+                    document.getElementById("btnPause").onclick = sendPauseVideo;
+                    
+                    document.getElementById("btnMute").onclick = sendMuteVideo;
+        
+                    if (selectedData.type_content === "slider") {
+                        document.getElementById("btnPrevSlide").onclick = sendPrevSlide;
+                        document.getElementById("btnNextSlide").onclick = sendNextSlide;
+                    }
+                }
+            }
+        
+            // Kirim data ke Firestore
+            await setDoc(doc(db, 'selectedSubmenu', 'current'), dataToSend)
+                .then(() => {
+                    console.log("selectedSubmenu updated in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending selectedSubmenu to Firestore:', error);
+                });
+        };
+
+        window.sendPlayVideo = async function () {
+            await setDoc(doc(db, 'videoControl', 'status'), { action: 'play' })
+                .then(() => {
+                    console.log("Play command sent to Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending play command to Firestore:', error);
+                });
+        }
+
+        window.sendPauseVideo = async function () {
+            await setDoc(doc(db, 'videoControl', 'status'), { action: 'pause' })
+                .then(() => {
+                    console.log("Pause command sent to Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending pause command to Firestore:', error);
+                });
+        }
+        
+        window.sendMuteVideo = async function () {
+            await setDoc(doc(db, 'videoControl', 'status'), { action: 'mute' })
+                .then(() => {
+                    console.log("Mute command sent to Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending mute command to Firestore:', error);
+                });
+        }
+
+        window.sendNextSlide = async function () {
+            await setDoc(doc(db, 'sliderControl', 'action'), { action: 'next', timestamp: Date.now() })
+                .then(() => {
+                    console.log("Next slide command sent to Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending next slide command to Firestore:', error);
+                });
+        }
+
+        window.sendPrevSlide = async function () {
+            await setDoc(doc(db, 'sliderControl', 'action'), { action: 'prev', timestamp: Date.now() })
+                .then(() => {
+                    console.log("Previous slide command sent to Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error sending previous slide command to Firestore:', error);
+                });
+        }
+
+        window.clearDisplay = async function () {
+            // Mengatur dokumen kontrol video menjadi null
+            await setDoc(doc(db, 'videoControl', 'status'), { action: null })
+                .then(() => {
+                    console.log("Video control reset in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error resetting video control in Firestore:', error);
+                });
+
+            // Mengatur dokumen kontrol slider menjadi null
+            await setDoc(doc(db, 'sliderControl', 'action'), { action: null })
+                .then(() => {
+                    console.log("Slider control reset in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error resetting slider control in Firestore:', error);
+                });
+
+            // Mengatur dokumen kuis menjadi null
+            await setDoc(doc(db, 'quiz', 'answer'), { answer: null })
+                .then(() => {
+                    console.log("Quiz answer reset in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error resetting quiz answer in Firestore:', error);
+                });
+            await setDoc(doc(db, 'quizNext', 'status'), { status: null })
+                .then(() => {
+                    console.log("Quiz next status reset in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error resetting quiz next status in Firestore:', error);
+                });
+
+            await setDoc(doc(db, 'quizDisplayOptions', 'currentQuiz'), { question: null, options: [] })
+                .then(() => {
+                    console.log("Quiz display options reset in Firestore successfully!");
+                })
+                .catch((error) => {
+                    console.error('Error resetting quiz display options in Firestore:', error);
+                });
+
+            // Mengatur selectedSubmenu ke nilai default
+            sendToDisplay(0, 0);
+        };
+        
+        let dataReceived = false;
+        let interval = null;
+        
+        // Referensi dokumen Firestore untuk selectedSubmenu dan videoControl
+        const selectedSubmenuDocRef = doc(db, 'selectedSubmenu', 'current');
+        const videoControlDocRef = doc(db, 'videoControl', 'status');
+        
+        // Fungsi untuk mengecek apakah ada pembaruan dalam 20 detik
+        async function checkDataTimeout() {
+            if (!dataReceived) {
+                const docSnapshot = await getDoc(selectedSubmenuDocRef);
+                const data = docSnapshot.data();
+                if (data && data.id !== 0) {
+                    clearDisplay();
+                    stopInterval();
+                }
+            }
+            dataReceived = false; // Reset flag untuk iterasi berikutnya
+        }
+        
+        // Fungsi untuk memulai interval hanya jika data.id !== 0
+        function startInterval() {
+            stopInterval(); // Pastikan tidak ada interval ganda
+            interval = setInterval(checkDataTimeout, 20000);
+        }
+        
+        // Fungsi untuk menghentikan interval jika tidak diperlukan
+        function stopInterval() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+        }
+        
+        // Fungsi untuk menangani pembaruan dari Firestore
+        function handleDataUpdate(docSnapshot, dataType) {
+            if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                if (data && data?.name?.type_content !== "default" && data?.name?.type_content !== "video") {
+                    dataReceived = true;
+                    startInterval(); // Reset timer setiap ada update
+                }
+            }
+        }
+        
+        // Tambahkan listener Firestore untuk reset timer setiap ada update
+        onSnapshot(selectedSubmenuDocRef, (snapshot) => handleDataUpdate(snapshot, 'selectedSubmenu'));
+        onSnapshot(videoControlDocRef, (snapshot) => handleDataUpdate(snapshot, 'videoControl'));
+        // onSnapshot(langDocRef, (snapshot) => handleDataUpdate(snapshot, 'lang')); // Lang sudah ditangani di atas
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+    <img src="./assets/img/header.png" alt="" class="position-absolute" style="top: -48px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 250vh;">
+</body>
+
+
+</html>
