@@ -241,6 +241,8 @@ self.addEventListener('fetch', event => {
   );
 });
 
+// 
+
 // Saat activate, hapus cache lama
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
