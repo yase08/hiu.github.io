@@ -1,385 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <base href="/hiu.github.io/">
-  <title>Pusat Edukasi Hiu Paus</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.min.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="manifest" href="manifest.json">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/hiu.github.io/" />
+    <title>Pusat Edukasi Hiu Paus</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="assets/css/bootstrap/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="manifest" href="manifest.json" />
     <style>
-        .carousel {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
+      .carousel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
 
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
+      .carousel-slides {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
 
-        .carousel-slides .slide {
-            flex-shrink: 0;
-            width: 100%;
-            height: auto;
-        }
+      .carousel-slides .slide {
+        flex-shrink: 0;
+        width: 100%;
+        height: auto;
+      }
 
-        .carousel-slides img {
-            width: 100%;
-            height: auto;
-        }
+      .carousel-slides img {
+        width: 100%;
+        height: auto;
+      }
 
-        .carousel-control {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 10;
-        }
+      .carousel-control {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 10;
+      }
 
-        .carousel-control.prev {
-            left: 10px;
-        }
+      .carousel-control.prev {
+        left: 10px;
+      }
 
-        .carousel-control.next {
-            right: 10px;
-        }
+      .carousel-control.next {
+        right: 10px;
+      }
 
+      .quiz-container {
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+      }
 
+      .question {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
 
-        .quiz-container {
-            background: #ffffff;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            transition: transform 0.3s ease-in-out;
-        }
+      .options {
+        list-style: none;
+        padding: 0;
+      }
 
-        .question {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
+      .options li {
+        margin-bottom: 10px;
+      }
 
-        .options {
-            list-style: none;
-            padding: 0;
-        }
+      .options button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        background: #f3f4f6;
+        color: #333;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
 
-        .options li {
-            margin-bottom: 10px;
-        }
+      .options button:focus {
+        background: inherit;
+      }
 
-        .options button {
-            width: 100%;
-            padding: 10px;
-            font-size: 1em;
-            background: #f3f4f6;
-            color: #333;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .options button.correct {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+      }
 
-        .options button:focus {
-            background: inherit;
-        }
+      .options button.wrong {
+        background: #dc3545;
+        color: white;
+        border-color: #dc3545;
+      }
 
-        .options button.correct {
-            background: #28a745;
-            color: white;
-            border-color: #28a745;
-        }
-
-        .options button.wrong {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
-        }
-
-        /* .options button:hover {
+      /* .options button:hover {
             background: #007bff;
             color: white;
             border-color: #007bff;
         } */
 
-        .next-btn {
-            display: none;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1em;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
+      .next-btn {
+        display: none;
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1em;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .next-btn:hover {
+        background: #0056b3;
+      }
+
+      .result {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+      }
+
+      .score {
+        font-size: 2em;
+        color: #333;
+        margin: 20px 0;
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
 
-        .next-btn:hover {
-            background: #0056b3;
+        to {
+          opacity: 1;
+        }
+      }
+
+      .tooltip {
+        display: block;
+        position: absolute;
+        background: transparent;
+        width: 30px;
+        height: 30px;
+        border-radius: 100px;
+        top: 50%;
+      }
+
+      .tooltip-content p {
+        padding-top: 10px;
+      }
+
+      .anatomy-while {
+        animation: float 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+      }
+
+      .anatomy-while:hover {
+        filter: brightness(110%);
+        transition: filter 0.3s ease;
+      }
+
+      .anatomy-while-container:hover .tooltip {
+        display: block;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translatey(0px);
         }
 
-        .result {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
+        50% {
+          transform: translatey(-10px);
         }
 
-        .score {
-            font-size: 2em;
-            color: #333;
-            margin: 20px 0;
-            animation: fadeIn 1s ease-in-out;
+        100% {
+          transform: translatey(0px);
         }
+      }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
+      #map {
+        width: 90%;
+        height: 500px;
+        border: 2px solid #ccc;
+      }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
+      video::-webkit-media-controls {
+        display: none !important;
+      }
 
-            to {
-                opacity: 1;
-            }
-        }
-
-        .tooltip {
-            display: block;
-            position: absolute;
-            background: transparent;
-            width: 30px;
-            height: 30px;
-            border-radius: 100px;
-            top: 50%;
-        }
-
-        .tooltip-content p {
-            padding-top: 10px;
-        }
-
-
-        .anatomy-while {
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-        }
-
-        .anatomy-while:hover {
-            filter: brightness(110%);
-            transition: filter 0.3s ease;
-        }
-
-        .anatomy-while-container:hover .tooltip {
-            display: block;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translatey(0px);
-            }
-
-            50% {
-                transform: translatey(-10px);
-            }
-
-            100% {
-                transform: translatey(0px);
-            }
-        }
-
-        #map {
-            width: 90%;
-            height: 500px;
-            border: 2px solid #ccc;
-        }
-
-        video::-webkit-media-controls {
-            display: none !important;
-        }
-
-        video::-webkit-media-controls-enclosure {
-            display: none !important;
-        }
+      video::-webkit-media-controls-enclosure {
+        display: none !important;
+      }
     </style>
-</head>
+  </head>
 
-<body class="content__1 position-relative"
-    style="margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh;">
-    <div id="video-container" style="width: 80%; display: flex; justify-content: center; align-items: center;">
-        </div>
+  <body
+    class="content__1 position-relative"
+    style="
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    "
+  >
+    <div
+      id="video-container"
+      style="
+        width: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    ></div>
 
     <script type="module">
-        // Mengimpor fungsi yang dibutuhkan dari Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, deleteDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      // Mengimpor fungsi yang dibutuhkan dari Firebase SDKs
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        onSnapshot,
+        updateDoc,
+        deleteDoc,
+        enableIndexedDbPersistence,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase aplikasi web Anda
-        const firebaseConfig = {
-            apiKey: "AIzaSyAoK6hw2BEw8YcDrc02z2slV2j3Qu_3kwU", // Ganti dengan API Key Anda
-            authDomain: "teluksaleh-951ab.firebaseapp.com",
-            projectId: "teluksaleh-951ab",
-            storageBucket: "teluksaleh-951ab.appspot.com",
-            messagingSenderId: "974216375770",
-            appId: "1:974216375770:web:845ad7e1a6e0f4668f64e3",
-            measurementId: "G-DW2K13HECS"
-        };
+      // Konfigurasi Firebase aplikasi web Anda
+      const firebaseConfig = {
+        apiKey: "AIzaSyAoK6hw2BEw8YcDrc02z2slV2j3Qu_3kwU", // Ganti dengan API Key Anda
+        authDomain: "teluksaleh-951ab.firebaseapp.com",
+        projectId: "teluksaleh-951ab",
+        storageBucket: "teluksaleh-951ab.appspot.com",
+        messagingSenderId: "974216375770",
+        appId: "1:974216375770:web:845ad7e1a6e0f4668f64e3",
+        measurementId: "G-DW2K13HECS",
+      };
 
-        // Inisialisasi Firebase
-        const app = initializeApp(firebaseConfig);
+      // Inisialisasi Firebase
+      const app = initializeApp(firebaseConfig);
 
-        // Inisialisasi Cloud Firestore dan dapatkan referensi ke layanan
-        const db = getFirestore(app);
+      // Inisialisasi Cloud Firestore dan dapatkan referensi ke layanan
+      const db = getFirestore(app);
 
-        // Mengaktifkan persistensi offline untuk Cloud Firestore
+      // Mengaktifkan persistensi offline untuk Cloud Firestore
 
-        enableIndexedDbPersistence(db)
+      enableIndexedDbPersistence(db)
         .then(() => {
-            console.log("✅ Offline persistence enabled");
+          console.log("✅ Offline persistence enabled");
         })
-        .catch(err => {
-            console.error("❌ Failed to enable offline persistence", err);
+        .catch((err) => {
+          console.error("❌ Failed to enable offline persistence", err);
         });
 
+      const submenuContent = "default.png";
 
-        const submenuContent = 'default.png';
+      document.getElementById("video-container").innerHTML = `
+    <img src="assets/img/content/${submenuContent}" alt="Image" width="100%" height="90%" />
+`;
 
-        document.getElementById('video-container').innerHTML = `
-            <img src="../assets/img/content/${submenuContent}" alt="Image" width="100%" height="90%" />
-        `;
+      // Fungsi untuk memproses data setelah parsing
+      function processData(data) {
+        console.log("Data diterima dari Firestore:", data);
 
-        // Fungsi untuk memproses data setelah parsing
-        function processData(data) {
-            console.log("Data diterima dari Firestore:", data);
+        const videoContainer = document.getElementById("video-container");
 
-            const videoContainer = document.getElementById('video-container');
+        if (!data || !data.name || !data.name.type_content) {
+          console.error("Invalid data format or missing type_content");
+          return;
+        }
 
-            if (!data || !data.name || !data.name.type_content) {
-                console.error('Invalid data format or missing type_content');
-                return;
-            }
+        // Set background body
+        if (data.name.background) {
+          document.body.style.backgroundImage = `url(assets/img/${data.name.background})`;
+        } else {
+          document.body.style.backgroundImage = "none"; // Clear background if not specified
+        }
 
-            // Set background body
-            if (data.name.background) {
-                document.body.style.backgroundImage = `url(../assets/img/${data.name.background})`;
-            } else {
-                document.body.style.backgroundImage = 'none'; // Clear background if not specified
-            }
+        // Clear previous content
+        videoContainer.innerHTML = "";
 
-            // Clear previous content
-            videoContainer.innerHTML = '';
-
-            if (data.name.type_content === "video") {
-                videoContainer.innerHTML = `
+        if (data.name.type_content === "video") {
+          videoContainer.innerHTML = `
                     <video id="video-frame" controls="false" width="100%" height="100%">
-                        <source src="../assets/mp4/${data.name.submenu_content}" type="video/mp4">
-                        Browser Anda tidak mendukung tag video.
+                        <source src="assets/mp4/${data.name.submenu_content}" type="video/mp4">                        Browser Anda tidak mendukung tag video.
                     </video>
                 `;
-                const videoFrame = document.getElementById('video-frame');
+          const videoFrame = document.getElementById("video-frame");
 
-                // Mendengarkan perintah video dari Firestore
-                onSnapshot(doc(db, 'videoControl', 'status'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const controlData = docSnapshot.data();
-                        if (controlData && controlData.action) {
-                            if (controlData.action === "play") {
-                                videoFrame.play().catch((error) => {
-                                    console.error("Error playing video:", error);
-                                });
-                            } else if (controlData.action === "pause") {
-                                videoFrame.pause();
-                            } else if (controlData.action === "mute") {
-                                videoFrame.muted = true;
-                            } else if (controlData.action === "unmute") { // Tambahkan unmute jika diperlukan
-                                videoFrame.muted = false;
-                            }
-                        }
-                    } else {
-                        console.log("No 'videoControl' document found.");
-                    }
-                }, (error) => {
-                    console.error("Error listening to videoControl:", error);
-                });
-
-            } else if (data.name.type_content === "iframe") {
-                videoContainer.innerHTML = `
+          // Mendengarkan perintah video dari Firestore
+          onSnapshot(
+            doc(db, "videoControl", "status"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const controlData = docSnapshot.data();
+                if (controlData && controlData.action) {
+                  if (controlData.action === "play") {
+                    videoFrame.play().catch((error) => {
+                      console.error("Error playing video:", error);
+                    });
+                  } else if (controlData.action === "pause") {
+                    videoFrame.pause();
+                  } else if (controlData.action === "mute") {
+                    videoFrame.muted = true;
+                  } else if (controlData.action === "unmute") {
+                    // Tambahkan unmute jika diperlukan
+                    videoFrame.muted = false;
+                  }
+                }
+              } else {
+                console.log("No 'videoControl' document found.");
+              }
+            },
+            (error) => {
+              console.error("Error listening to videoControl:", error);
+            }
+          );
+        } else if (data.name.type_content === "iframe") {
+          videoContainer.innerHTML = `
                     <iframe src="${data.name.submenu_content}" width="800" height="600" frameborder="0" style="border:0" allowfullscreen></iframe>
                 `;
-            } else if (data.name.type_content === "video-youtube") {
-                videoContainer.innerHTML = `
+        } else if (data.name.type_content === "video-youtube") {
+          videoContainer.innerHTML = `
                     <iframe id="video-frame" src="https://www.youtube.com/embed/${data.name.submenu_content}?autoplay=1&mute=1&controls=1" controls width="100%" height="100%"></iframe>
                 `;
-                const videoFrame = document.getElementById('video-frame');
+          const videoFrame = document.getElementById("video-frame");
 
-                // Mendengarkan perintah video dari Firestore
-                onSnapshot(doc(db, 'videoControl', 'status'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const controlData = docSnapshot.data();
-                        if (controlData && controlData.action) {
-                            // Untuk YouTube iframe, kita tidak bisa langsung memanggil play/pause/mute
-                            // Ini memerlukan YouTube Iframe API, yang lebih kompleks.
-                            // Untuk demo ini, kita akan mengabaikan kontrol langsung dari Firebase untuk YouTube.
-                            console.warn("Direct video control for YouTube iframe is not supported without YouTube Iframe API.");
-                        }
-                    }
-                }, (error) => {
-                    console.error("Error listening to videoControl for YouTube:", error);
-                });
-
-            } else if (data.name.type_content === "image") {
-                onSnapshot(doc(db, 'settings', 'lang'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const langData = docSnapshot.data();
-                        const currentLang = langData.value;
-                        const imageUrl = currentLang === "id" ? data.name.submenu_content : (data.name.submenu_content_en ?? data.name.submenu_content);
-                        videoContainer.innerHTML = `
-                            <img src="../assets/img/content/${imageUrl}" alt="Image" width="100%" height="100%" />
-                        `;
-                    } else {
-                        console.log("No 'lang' document found in 'settings' collection. Defaulting to 'id'.");
-                        videoContainer.innerHTML = `
-                            <img src="../assets/img/content/${data.name.submenu_content}" alt="Image" width="100%" height="100%" />
-                        `;
-                    }
-                }, (error) => {
-                    console.error("Error listening to language setting:", error);
-                });
-            } else if (data.name.type_content === "default") {
+          // Mendengarkan perintah video dari Firestore
+          onSnapshot(
+            doc(db, "videoControl", "status"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const controlData = docSnapshot.data();
+                if (controlData && controlData.action) {
+                  // Untuk YouTube iframe, kita tidak bisa langsung memanggil play/pause/mute
+                  // Ini memerlukan YouTube Iframe API, yang lebih kompleks.
+                  // Untuk demo ini, kita akan mengabaikan kontrol langsung dari Firebase untuk YouTube.
+                  console.warn(
+                    "Direct video control for YouTube iframe is not supported without YouTube Iframe API."
+                  );
+                }
+              }
+            },
+            (error) => {
+              console.error(
+                "Error listening to videoControl for YouTube:",
+                error
+              );
+            }
+          );
+        } else if (data.name.type_content === "image") {
+          onSnapshot(
+            doc(db, "settings", "lang"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const langData = docSnapshot.data();
+                const currentLang = langData.value;
+                const imageUrl =
+                  currentLang === "id"
+                    ? data.name.submenu_content
+                    : data.name.submenu_content_en ?? data.name.submenu_content;
                 videoContainer.innerHTML = `
+                        <img src="assets/img/content/${imageUrl}" alt="Image" width="100%" height="100%" />
+                        `;
+              } else {
+                console.log(
+                  "No 'lang' document found in 'settings' collection. Defaulting to 'id'."
+                );
+                videoContainer.innerHTML = `
+                            <img src="assets/img/content/${data.name.submenu_content}" alt="Image" width="100%" height="100%" />
+                        `;
+              }
+            },
+            (error) => {
+              console.error("Error listening to language setting:", error);
+            }
+          );
+        } else if (data.name.type_content === "default") {
+          videoContainer.innerHTML = `
                  <video autoplay loop>
-                    <source src="../assets/img/${data.name.background}" type="video/mp4">
-                    Browser Anda tidak mendukung video.
+<source src="assets/img/${data.name.background}" type="video/mp4">                    Browser Anda tidak mendukung video.
                 </video>
                 `;
-            } else if (data.name.type_content === "image-interactive") {
-                document.body.style.backgroundImage = `url(../assets/img/mengenal-hiu.png)`;
-                videoContainer.innerHTML = `
+        } else if (data.name.type_content === "image-interactive") {
+          document.body.style.backgroundImage = `url(assets/img/mengenal-hiu.png)`;
+          videoContainer.innerHTML = `
                 <div style="display: flex; flex-direction: column; align-items:center;">
                     <div style="width: 100%; display: flex; justify-content: start;">
                         <p class="ProximaNovaBold" style="font-size: 58px;color: white;"><b>Anatomi Tubuh</b> | Anatomy of the Body</p>
                     </div>
                     <div class="anatomy-while-container" style="position: relative;">
-                        <img class="anatomy-while" src="../assets/img/content/anatomy-whale.png" width="1500px" alt="">
+                        <img class="anatomy-while" src="assets/img/content/anatomy-whale.png" width="1500px" alt="">
                         <div class="tooltip" style="left: 4.3%;top: 21%;">
                             <div class="tooltip-content" style="height: 130px;border-top: 2px solid yellow;border-left: 2px solid yellow;background: transparent;color: white;padding: 10px;">
                                 <p style="position: relative; top: -40px; left: 27px; font-size: 25px;"><b>Mata</b><br>Eye</p>
@@ -423,35 +466,37 @@
                     </div>
                 </div>
                 `;
-            } else if (data.name.type_content === "image-text") {
-                videoContainer.innerHTML = `
+        } else if (data.name.type_content === "image-text") {
+          videoContainer.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items:center;">
                         <h1 class="ProximaNovaBold" style="font-size: 62px; color: white;">${data.name.submenu_content.judul}</h1>
                         <p class="ProximaNovaBold" style="font-size: 62px; color: white;">${data.name.submenu_content.judul_en}</p>
-                        <img src="../assets/img/content/${data.name.submenu_content.gambar}" style="height: 500px;" />
+                        <img src="assets/img/content/${data.name.submenu_content.gambar}" style="height: 500px;" />
                     </div>
                 `;
-            } else if (data.name.type_content === "peta" || data.name.type_content === "peta-global") {
-                videoContainer.innerHTML = `
+        } else if (
+          data.name.type_content === "peta" ||
+          data.name.type_content === "peta-global"
+        ) {
+          videoContainer.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items:center;">
                         <h1 class="ProximaNovaBold" style="font-size: 62px; color: white;">Teluk Saleh dan Habitat Hiu Paus</h1>
                         <p class="ProximaNovaRegular" style="font-size: 62px; color: white;">Saleh Bay and Whale Sharks Habitat</p>
                         <div id="map" style="height: 500px; width: 90%;"></div>
                     </div>
                 `;
-                const map = L.map('map').setView(data.name.setView, data.name.zoom);
+          const map = L.map("map").setView(data.name.setView, data.name.zoom);
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
-                }).addTo(map);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap contributors",
+          }).addTo(map);
 
-                data.name.submenu_content.forEach((lokasi) => {
-                    const marker = L.marker([lokasi.lat, lokasi.lng]).addTo(map);
-                    marker.bindPopup(`<b>${lokasi.name}</b><br>${lokasi.description}`);
-                });
-
-            } else if (data.name.type_content === "form") {
-                videoContainer.innerHTML = `
+          data.name.submenu_content.forEach((lokasi) => {
+            const marker = L.marker([lokasi.lat, lokasi.lng]).addTo(map);
+            marker.bindPopup(`<b>${lokasi.name}</b><br>${lokasi.description}`);
+          });
+        } else if (data.name.type_content === "form") {
+          videoContainer.innerHTML = `
                     <form id="conservation-form" style="display: flex; flex-direction: column; align-items: center; width: 80%; margin: 0 auto; padding: 20px; border-radius: 15px; background-color: rgba(0, 112, 184, 0.5);">
                         <h2 class="font-white text-header t-center ProximaNovaBold" style="margin-bottom: 15px; font-size: 2em;">
                             Bergabunglah dalam Konservasi Hiu Paus di Teluk Saleh!
@@ -479,96 +524,126 @@
                     </form>
                 `;
 
-                window.handleFormSubmit = async () => {
-                    const form = document.getElementById('conservation-form');
-                    const formData = new FormData(form);
-                    const dataToSend = Object.fromEntries(formData.entries());
+          window.handleFormSubmit = async () => {
+            const form = document.getElementById("conservation-form");
+            const formData = new FormData(form);
+            const dataToSend = Object.fromEntries(formData.entries());
 
-                    const sheetType = form.dataset.sheetType || 'general';
-                    dataToSend.sheetType = sheetType;
+            const sheetType = form.dataset.sheetType || "general";
+            dataToSend.sheetType = sheetType;
 
-                    try {
-                        const response = await fetch('https://script.google.com/macros/s/AKfycbxz-dyp8WHF13D3zilfR_9Xfzz6LryXN9NGTNUnKbnuUlmtI0w8UeNC56nxhVtz2-dA/exec', {
-                            method: 'POST',
-                            body: new URLSearchParams(dataToSend),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        });
+            try {
+              const response = await fetch(
+                "https://script.google.com/macros/s/AKfycbxz-dyp8WHF13D3zilfR_9Xfzz6LryXN9NGTNUnKbnuUlmtI0w8UeNC56nxhVtz2-dA/exec",
+                {
+                  method: "POST",
+                  body: new URLSearchParams(dataToSend),
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                }
+              );
 
-                        if (response.ok) {
-                            console.log('Form submitted successfully!');
-                            showCustomAlert('Formulir berhasil dikirim!');
-                            form.reset();
-                        } else {
-                            console.log('Failed to submit the form.');
-                            showCustomAlert('Gagal mengirim formulir.');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showCustomAlert('Terjadi kesalahan saat mengirim formulir.');
-                    }
-                };
+              if (response.ok) {
+                console.log("Form submitted successfully!");
+                showCustomAlert("Formulir berhasil dikirim!");
+                form.reset();
+              } else {
+                console.log("Failed to submit the form.");
+                showCustomAlert("Gagal mengirim formulir.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showCustomAlert("Terjadi kesalahan saat mengirim formulir.");
+            }
+          };
 
-                // Fungsi untuk menampilkan modal kustom (mengganti alert)
-                function showCustomAlert(message) {
-                    const alertModal = document.createElement('div');
-                    alertModal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50';
-                    alertModal.innerHTML = `
+          // Fungsi untuk menampilkan modal kustom (mengganti alert)
+          function showCustomAlert(message) {
+            const alertModal = document.createElement("div");
+            alertModal.className =
+              "fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50";
+            alertModal.innerHTML = `
                         <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
                             <p class="text-lg font-semibold text-gray-800 mb-4">${message}</p>
                             <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300" onclick="this.closest('.fixed').remove()">OK</button>
                         </div>
                     `;
-                    document.body.appendChild(alertModal);
-                }
+            document.body.appendChild(alertModal);
+          }
+        } else if (data.name.type_content === "article") {
+          onSnapshot(
+            doc(db, "settings", "lang"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const langData = docSnapshot.data();
+                const currentLang = langData.value;
+                const content = data.name.submenu_content;
+                const judul =
+                  currentLang === "id" ? content.judul : content.judul_en;
+                const informasi =
+                  currentLang === "id"
+                    ? content.informasi ?? ""
+                    : content.informasi_en ?? "";
+                const gambar =
+                  currentLang === "id" || !content.gambar_en
+                    ? content.gambar
+                    : content.gambar_en;
 
-            } else if (data.name.type_content === "article") {
-                onSnapshot(doc(db, 'settings', 'lang'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const langData = docSnapshot.data();
-                        const currentLang = langData.value;
-                        const content = data.name.submenu_content;
-                        const judul = currentLang === "id" ? content.judul : content.judul_en;
-                        const informasi = currentLang === "id" ? (content.informasi ?? "") : (content.informasi_en ?? "");
-                        const gambar = (currentLang === "id" || !content.gambar_en) ? content.gambar : content.gambar_en;
-
-                        videoContainer.innerHTML = `
+                videoContainer.innerHTML = `
                             <div class="text-header" style="padding: 20px; border-radius: 15px;">
                                 <h2 class="font-white text-header t-center ProximaNovaBold" style="margin-bottom: 15px; font-size: 2em;">${judul}</h2>
-                                <img src="../assets/img/content/${gambar}" alt="" width="${data.name.width ?? '50%'}" style="display: block; margin: 0 auto; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <img src="assets/img/content/${gambar}" alt="" width="${
+                  data.name.width ?? "50%"
+                }" style="display: block; margin: 0 auto; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                                 <p class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular" style="line-height: 1.6; margin-top: 20px;">${informasi}</p>
                             </div>
                         `;
-                    } else {
-                        console.log("No 'lang' document found. Defaulting to 'id'.");
-                        const content = data.name.submenu_content;
-                        videoContainer.innerHTML = `
+              } else {
+                console.log("No 'lang' document found. Defaulting to 'id'.");
+                const content = data.name.submenu_content;
+                videoContainer.innerHTML = `
                             <div class="text-header" style="padding: 20px; border-radius: 15px;">
-                                <h2 class="font-white text-header t-center ProximaNovaBold" style="margin-bottom: 15px; font-size: 2em;">${content.judul}</h2>
-                                <img src="../assets/img/content/${content.gambar}" alt="" width="${data.name.width ?? '50%'}" style="display: block; margin: 0 auto; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                                <p class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular" style="line-height: 1.6; margin-top: 20px;">${content.informasi ?? ""}</p>
+                                <h2 class="font-white text-header t-center ProximaNovaBold" style="margin-bottom: 15px; font-size: 2em;">${
+                                  content.judul
+                                }</h2>
+                                <img src="assets/img/content/${
+                                  content.gambar
+                                }" alt="" width="${
+                  data.name.width ?? "50%"
+                }" style="display: block; margin: 0 auto; border-radius: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <p class="font-white t-center margin-t-20 text-xl padding-x-50 ProximaNovaRegular" style="line-height: 1.6; margin-top: 20px;">${
+                                  content.informasi ?? ""
+                                }</p>
                             </div>
                         `;
-                    }
-                }, (error) => {
-                    console.error("Error listening to language setting:", error);
-                });
-            } else if (data.name.type_content === "slider") {
-                const images = data.name.submenu_content.map(image => {
-                    const ext = image.split('.').pop().toLowerCase();
-                    if (ext === 'mp4') {
-                        return `../assets/mp4/${image.trim()}`;
-                    } else {
-                        return `../assets/img/content/${image.trim()}`;
-                    }
-                });
+              }
+            },
+            (error) => {
+              console.error("Error listening to language setting:", error);
+            }
+          );
+        } else if (data.name.type_content === "slider") {
+          const images = data.name.submenu_content.map((image) => {
+            const ext = image.split(".").pop().toLowerCase();
+            if (ext === "mp4") {
+              return `assets/mp4/${image.trim()}`;
+            } else {
+              return `assets/img/content/${image.trim()}`;
+            }
+          });
 
-                videoContainer.innerHTML = `
+          videoContainer.innerHTML = `
                     <div class="carousel">
                         <div class="carousel-slides" style="height: inherit;">
-                            ${images.map(image => {
-                                const ext = image.split('.').pop().toLowerCase();
-                                if (ext === 'mp4') {
-                                    return `
+                            ${images
+                              .map((image) => {
+                                const ext = image
+                                  .split(".")
+                                  .pop()
+                                  .toLowerCase();
+                                if (ext === "mp4") {
+                                  return `
                                     <div class="slide" style="height: inherit;">
                                         <video controls="false" muted id="video-frame" style="width: 100%; height: 100%;">
                                             <source src="${image}" type="video/mp4">
@@ -576,82 +651,97 @@
                                     </div>
                                     `;
                                 } else {
-                                    return `
+                                  return `
                                     <div class="slide">
                                         <img src="${image}" style="width: 100%; height: 100%;" alt="Image">
                                     </div>
                                     `;
                                 }
-                            }).join('')}
+                              })
+                              .join("")}
                         </div>
                         <button class="prev carousel-control" style="visibility: hidden;"><</button>
                         <button class="next carousel-control" style="visibility: hidden;">></button>
                     </div>
                 `;
 
-                const slidesContainer = document.querySelector('.carousel-slides');
-                const slides = slidesContainer.children;
-                let currentIndex = 0;
+          const slidesContainer = document.querySelector(".carousel-slides");
+          const slides = slidesContainer.children;
+          let currentIndex = 0;
 
-                function updateCarousel() {
-                    const offset = -currentIndex * 100;
-                    slidesContainer.style.transform = `translateX(${offset}%)`;
+          function updateCarousel() {
+            const offset = -currentIndex * 100;
+            slidesContainer.style.transform = `translateX(${offset}%)`;
+          }
+
+          // Mendengarkan perintah slider dari Firestore
+          onSnapshot(
+            doc(db, "sliderControl", "action"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const controlData = docSnapshot.data();
+                if (controlData && controlData.action) {
+                  if (controlData.action === "next") {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    updateCarousel();
+                  } else if (controlData.action === "prev") {
+                    currentIndex =
+                      (currentIndex - 1 + slides.length) % slides.length;
+                    updateCarousel();
+                  }
+                  // Reset action di Firestore setelah diproses
+                  updateDoc(doc(db, "sliderControl", "action"), {
+                    action: null,
+                  });
                 }
+              }
+            },
+            (error) => {
+              console.error("Error listening to sliderControl:", error);
+            }
+          );
 
-                // Mendengarkan perintah slider dari Firestore
-                onSnapshot(doc(db, 'sliderControl', 'action'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const controlData = docSnapshot.data();
-                        if (controlData && controlData.action) {
-                            if (controlData.action === "next") {
-                                currentIndex = (currentIndex + 1) % slides.length;
-                                updateCarousel();
-                            } else if (controlData.action === "prev") {
-                                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-                                updateCarousel();
-                            }
-                            // Reset action di Firestore setelah diproses
-                            updateDoc(doc(db, 'sliderControl', 'action'), { action: null });
-                        }
+          // Mendengarkan perintah video dari Firestore (jika ada video di slider)
+          const videoFrame = document.getElementById("video-frame");
+          if (videoFrame) {
+            onSnapshot(
+              doc(db, "videoControl", "status"),
+              (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                  const controlData = docSnapshot.data();
+                  if (controlData && controlData.action) {
+                    if (controlData.action === "play") {
+                      videoFrame.play().catch((error) => {
+                        console.error("Error playing video:", error);
+                      });
+                    } else if (controlData.action === "pause") {
+                      videoFrame.pause();
+                    } else if (controlData.action === "mute") {
+                      videoFrame.muted = true;
+                    } else if (controlData.action === "unmute") {
+                      videoFrame.muted = false;
                     }
-                }, (error) => {
-                    console.error("Error listening to sliderControl:", error);
-                });
-
-                // Mendengarkan perintah video dari Firestore (jika ada video di slider)
-                const videoFrame = document.getElementById('video-frame');
-                if (videoFrame) {
-                    onSnapshot(doc(db, 'videoControl', 'status'), (docSnapshot) => {
-                        if (docSnapshot.exists()) {
-                            const controlData = docSnapshot.data();
-                            if (controlData && controlData.action) {
-                                if (controlData.action === "play") {
-                                    videoFrame.play().catch((error) => {
-                                        console.error("Error playing video:", error);
-                                    });
-                                } else if (controlData.action === "pause") {
-                                    videoFrame.pause();
-                                } else if (controlData.action === "mute") {
-                                    videoFrame.muted = true;
-                                } else if (controlData.action === "unmute") {
-                                    videoFrame.muted = false;
-                                }
-                            }
-                        }
-                    }, (error) => {
-                        console.error("Error listening to videoControl for slider:", error);
-                    });
+                  }
                 }
+              },
+              (error) => {
+                console.error(
+                  "Error listening to videoControl for slider:",
+                  error
+                );
+              }
+            );
+          }
 
-                updateCarousel(); // Inisialisasi carousel
-            } else if (data.name.type_content === "quiz") {
-                document.body.style.backgroundImage = `url(../assets/img/${data.name.background})`;
+          updateCarousel(); // Inisialisasi carousel
+        } else if (data.name.type_content === "quiz") {
+          document.body.style.backgroundImage = `url(assets/img/${data.name.background})`;
 
-                let currentQuestion = 0;
-                const quizData = data.name.submenu_content;
+          let currentQuestion = 0;
+          const quizData = data.name.submenu_content;
 
-                // Render the quiz container
-                videoContainer.innerHTML = `
+          // Render the quiz container
+          videoContainer.innerHTML = `
                     <div class="quiz-container" id="quiz-container">
                         <div id="quiz">
                             <p class="question" id="question"></p>
@@ -664,193 +754,241 @@
                     </div>
                 `;
 
-                const questionElement = document.getElementById('question');
-                const optionsElement = document.getElementById('options');
-                const nextButton = document.getElementById('next');
-                const resultElement = document.getElementById('result');
-                const scoreElement = document.createElement('div');
-                scoreElement.classList.add('score');
-                resultElement.appendChild(scoreElement);
+          const questionElement = document.getElementById("question");
+          const optionsElement = document.getElementById("options");
+          const nextButton = document.getElementById("next");
+          const resultElement = document.getElementById("result");
+          const scoreElement = document.createElement("div");
+          scoreElement.classList.add("score");
+          resultElement.appendChild(scoreElement);
 
-                function loadQuestion() {
-                    const currentQuiz = quizData[currentQuestion];
-                    // Kirim data soal ke Firestore untuk ditampilkan di sisi lain
-                    setDoc(doc(db, "quizDisplayOptions", "currentQuiz"), {
-                        question: currentQuiz.question,
-                        question_en: currentQuiz.question_en, // Tambahkan versi bahasa Inggris
-                        options: currentQuiz.options,
-                        options_en: currentQuiz.options_en, // Tambahkan versi bahasa Inggris
-                    }).then(() => {
-                        console.log("Data soal dan jawaban berhasil dikirim ke Firestore.");
-                    }).catch((error) => {
-                        console.error("Terjadi kesalahan saat mengirim data soal ke Firestore:", error);
+          function loadQuestion() {
+            const currentQuiz = quizData[currentQuestion];
+            // Kirim data soal ke Firestore untuk ditampilkan di sisi lain
+            setDoc(doc(db, "quizDisplayOptions", "currentQuiz"), {
+              question: currentQuiz.question,
+              question_en: currentQuiz.question_en, // Tambahkan versi bahasa Inggris
+              options: currentQuiz.options,
+              options_en: currentQuiz.options_en, // Tambahkan versi bahasa Inggris
+            })
+              .then(() => {
+                console.log(
+                  "Data soal dan jawaban berhasil dikirim ke Firestore."
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "Terjadi kesalahan saat mengirim data soal ke Firestore:",
+                  error
+                );
+              });
+
+            // Mendengarkan bahasa dari Firestore untuk menampilkan pertanyaan yang benar
+            onSnapshot(
+              doc(db, "settings", "lang"),
+              (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                  const langData = docSnapshot.data();
+                  const currentLang = langData.value;
+                  questionElement.textContent =
+                    currentLang === "id"
+                      ? currentQuiz.question
+                      : currentQuiz.question_en;
+
+                  optionsElement.innerHTML = ""; // Bersihkan opsi sebelumnya
+                  const options =
+                    currentLang === "id"
+                      ? currentQuiz.options
+                      : currentQuiz.options_en;
+
+                  options.forEach((option, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = option;
+                    button.classList.add("btn", "btn-primary", "mb-2");
+                    button.addEventListener("click", (event) => {
+                      currentQuiz.selectedOption = event.target.textContent;
+
+                      const buttons = optionsElement.querySelectorAll("button");
+                      buttons.forEach((btn) => {
+                        btn.disabled = true;
+                        btn.classList.remove("btn-primary");
+                        btn.classList.add("btn-secondary");
+                      });
+
+                      nextButton.style.display = "block";
                     });
-
-                    // Mendengarkan bahasa dari Firestore untuk menampilkan pertanyaan yang benar
-                    onSnapshot(doc(db, 'settings', 'lang'), (docSnapshot) => {
-                        if (docSnapshot.exists()) {
-                            const langData = docSnapshot.data();
-                            const currentLang = langData.value;
-                            questionElement.textContent = currentLang === "id" ? currentQuiz.question : currentQuiz.question_en;
-
-                            optionsElement.innerHTML = ''; // Bersihkan opsi sebelumnya
-                            const options = currentLang === "id" ? currentQuiz.options : currentQuiz.options_en;
-
-                            options.forEach((option, index) => {
-                                const button = document.createElement('button');
-                                button.textContent = option;
-                                button.classList.add('btn', 'btn-primary', 'mb-2');
-                                button.addEventListener('click', (event) => {
-                                    currentQuiz.selectedOption = event.target.textContent;
-
-                                    const buttons = optionsElement.querySelectorAll('button');
-                                    buttons.forEach(btn => {
-                                        btn.disabled = true;
-                                        btn.classList.remove('btn-primary');
-                                        btn.classList.add('btn-secondary');
-                                    });
-
-                                    nextButton.style.display = 'block';
-                                });
-                                const li = document.createElement('li');
-                                li.appendChild(button);
-                                optionsElement.appendChild(li);
-                            });
-                        }
-                    }, (error) => {
-                        console.error("Error listening to language setting for quiz:", error);
-                    });
-
-                    nextButton.style.display = 'none'; // Sembunyikan tombol Next secara default
+                    const li = document.createElement("li");
+                    li.appendChild(button);
+                    optionsElement.appendChild(li);
+                  });
                 }
+              },
+              (error) => {
+                console.error(
+                  "Error listening to language setting for quiz:",
+                  error
+                );
+              }
+            );
 
-                // Fungsi untuk memanipulasi klik berdasarkan data yang diterima dari Firestore
-                onSnapshot(doc(db, 'quiz', 'answer'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const data = docSnapshot.data();
-                        if (data && data.answer !== undefined) {
-                            const buttons = optionsElement.querySelectorAll('button');
-                            const buttonToClick = buttons[data.answer];
+            nextButton.style.display = "none"; // Sembunyikan tombol Next secara default
+          }
 
-                            if (buttonToClick) {
-                                buttonToClick.click();
-                            } else {
-                                console.error("Button tidak ditemukan untuk index:", data.answer);
-                            }
-                            // Hapus jawaban dari Firestore setelah diproses
-                            updateDoc(doc(db, 'quiz', 'answer'), { answer: null });
-                        }
-                    }
-                }, (error) => {
-                    console.error("Error listening to quiz answer:", error);
-                });
-
-                onSnapshot(doc(db, 'quizNext', 'status'), (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const data = docSnapshot.data();
-                        if (data && data.status === "next_quiz") {
-                            nextButton.click();
-                            // Hapus status next dari Firestore setelah diproses
-                            updateDoc(doc(db, 'quizNext', 'status'), { status: null });
-                        }
-                    }
-                }, (error) => {
-                    console.error("Error listening to quizNext status:", error);
-                });
-
-                nextButton.addEventListener('click', () => {
-                    currentQuestion++;
-                    if (currentQuestion < quizData.length) {
-                        loadQuestion();
-                    } else {
-                        quizEnd();
-                    }
-                });
-
-                function quizEnd() {
-                    document.getElementById('quiz').style.display = 'none';
-                    resultElement.style.display = 'flex';
-
-                    const dataToSend = {
-                        sheetType: 'quiz',
-                        'Tanggal': new Date().toISOString(),
-                        'Pertanyaan 1': quizData[0].selectedOption,
-                        'Pertanyaan 2': quizData[1].selectedOption,
-                        'Pertanyaan 3': quizData[2].selectedOption,
-                        'Pertanyaan 4': quizData[3].selectedOption,
-                        'Pertanyaan 5': quizData[4].selectedOption,
-                        'Pertanyaan 6': quizData[5].selectedOption
-                    };
-
-                    submitFormData(dataToSend);
-
-                    scoreElement.innerHTML = `Terima kasih telah mengisi kuesioner<br><i>Thank you for completing the questionnaire</i>`;
-
-                    // Hapus data kuis dari Firestore setelah selesai
-                    deleteDoc(doc(db, 'quiz', 'answer')).catch(e => console.error("Error deleting quiz answer:", e));
-                    deleteDoc(doc(db, 'quizNext', 'status')).catch(e => console.error("Error deleting quiz next status:", e));
-                    deleteDoc(doc(db, 'quizDisplayOptions', 'currentQuiz')).catch(e => console.error("Error deleting quiz display options:", e));
-                    currentQuestion = 0;
-                }
-
-                async function submitFormData(dataToSend) {
-                    try {
-                        const response = await fetch('https://script.google.com/macros/s/AKfycbxz-dyp8WHF13D3zilfR_9Xfzz6LryXN9NGTNUnKbnuUlmtI0w8UeNC56nxhVtz2-dA/exec', {
-                            method: 'POST',
-                            body: new URLSearchParams(dataToSend),
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        });
-
-                        if (response.ok) {
-                            console.log('Form submitted successfully!');
-                        } else {
-                            console.log('Failed to submit the form.');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                    }
-                }
-
-                loadQuestion();
-            } else {
-                console.error('Invalid message format or missing videoId');
-            }
-        }
-
-        // Mendengarkan perubahan data di Firestore untuk 'selectedSubmenu'
-        onSnapshot(doc(db, 'selectedSubmenu', 'current'), (docSnapshot) => {
-            if (docSnapshot.exists()) {
+          // Fungsi untuk memanipulasi klik berdasarkan data yang diterima dari Firestore
+          onSnapshot(
+            doc(db, "quiz", "answer"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
                 const data = docSnapshot.data();
-                processData(data);
+                if (data && data.answer !== undefined) {
+                  const buttons = optionsElement.querySelectorAll("button");
+                  const buttonToClick = buttons[data.answer];
+
+                  if (buttonToClick) {
+                    buttonToClick.click();
+                  } else {
+                    console.error(
+                      "Button tidak ditemukan untuk index:",
+                      data.answer
+                    );
+                  }
+                  // Hapus jawaban dari Firestore setelah diproses
+                  updateDoc(doc(db, "quiz", "answer"), { answer: null });
+                }
+              }
+            },
+            (error) => {
+              console.error("Error listening to quiz answer:", error);
+            }
+          );
+
+          onSnapshot(
+            doc(db, "quizNext", "status"),
+            (docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const data = docSnapshot.data();
+                if (data && data.status === "next_quiz") {
+                  nextButton.click();
+                  // Hapus status next dari Firestore setelah diproses
+                  updateDoc(doc(db, "quizNext", "status"), { status: null });
+                }
+              }
+            },
+            (error) => {
+              console.error("Error listening to quizNext status:", error);
+            }
+          );
+
+          nextButton.addEventListener("click", () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+              loadQuestion();
             } else {
-                console.log('No data found in selectedSubmenu document. Displaying default content.');
-                // Tampilkan konten default jika tidak ada data
-                document.body.style.backgroundImage = `url(../assets/img/Default.mp4)`; // Ganti dengan background default Anda
-                document.getElementById('video-container').innerHTML = `
+              quizEnd();
+            }
+          });
+
+          function quizEnd() {
+            document.getElementById("quiz").style.display = "none";
+            resultElement.style.display = "flex";
+
+            const dataToSend = {
+              sheetType: "quiz",
+              Tanggal: new Date().toISOString(),
+              "Pertanyaan 1": quizData[0].selectedOption,
+              "Pertanyaan 2": quizData[1].selectedOption,
+              "Pertanyaan 3": quizData[2].selectedOption,
+              "Pertanyaan 4": quizData[3].selectedOption,
+              "Pertanyaan 5": quizData[4].selectedOption,
+              "Pertanyaan 6": quizData[5].selectedOption,
+            };
+
+            submitFormData(dataToSend);
+
+            scoreElement.innerHTML = `Terima kasih telah mengisi kuesioner<br><i>Thank you for completing the questionnaire</i>`;
+
+            // Hapus data kuis dari Firestore setelah selesai
+            deleteDoc(doc(db, "quiz", "answer")).catch((e) =>
+              console.error("Error deleting quiz answer:", e)
+            );
+            deleteDoc(doc(db, "quizNext", "status")).catch((e) =>
+              console.error("Error deleting quiz next status:", e)
+            );
+            deleteDoc(doc(db, "quizDisplayOptions", "currentQuiz")).catch((e) =>
+              console.error("Error deleting quiz display options:", e)
+            );
+            currentQuestion = 0;
+          }
+
+          async function submitFormData(dataToSend) {
+            try {
+              const response = await fetch(
+                "https://script.google.com/macros/s/AKfycbxz-dyp8WHF13D3zilfR_9Xfzz6LryXN9NGTNUnKbnuUlmtI0w8UeNC56nxhVtz2-dA/exec",
+                {
+                  method: "POST",
+                  body: new URLSearchParams(dataToSend),
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                }
+              );
+
+              if (response.ok) {
+                console.log("Form submitted successfully!");
+              } else {
+                console.log("Failed to submit the form.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          }
+
+          loadQuestion();
+        } else {
+          console.error("Invalid message format or missing videoId");
+        }
+      }
+
+      // Mendengarkan perubahan data di Firestore untuk 'selectedSubmenu'
+      onSnapshot(
+        doc(db, "selectedSubmenu", "current"),
+        (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const data = docSnapshot.data();
+            processData(data);
+          } else {
+            console.log(
+              "No data found in selectedSubmenu document. Displaying default content."
+            );
+            // Tampilkan konten default jika tidak ada data
+            document.body.style.backgroundImage = `url(assets/img/Default.mp4)`; // Ganti dengan background default Anda
+            document.getElementById("video-container").innerHTML = `
                     <video autoplay muted loop>
-                        <source src="../assets/img/Default.mp4" type="video/mp4">
+                        <source src="assets/img/Default.mp4" type="video/mp4">
                         Browser Anda tidak mendukung video.
                     </video>
                 `;
-            }
-        }, (error) => {
-            console.error('Error listening to selectedSubmenu:', error);
-        });
+          }
+        },
+        (error) => {
+          console.error("Error listening to selectedSubmenu:", error);
+        }
+      );
     </script>
 
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful');
-                })
-                .catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("service-worker.js")
+            .then((registration) => {
+              console.log("ServiceWorker registration successful");
+            })
+            .catch((err) => {
+              console.log("ServiceWorker registration failed: ", err);
+            });
         });
-    }
-</script>
-</body>
-
+      }
+    </script>
+  </body>
 </html>
