@@ -2,13 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusat Edukasi Hiu Paus</title>
-    <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="./assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/hiu.github.io/">  <title>Pusat Edukasi Hiu Paus</title>
+  <link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.min.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="./assets/css/style.css"> <link rel="manifest" href="manifest.json"> </head>
     <link rel="manifest" href="/manifest.json">
     <style>
         .custom-select {
@@ -107,7 +105,7 @@
     <script type="module">
         // Mengimpor fungsi yang dibutuhkan dari Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, updateDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot, updateDoc, persistentLocalCache, memoryLocalCache, initializeFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         // Catatan: Untuk analytics, Anda masih bisa menggunakannya, tetapi tidak terkait langsung dengan fungsionalitas database offline
         // import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
@@ -126,24 +124,13 @@
         const app = initializeApp(firebaseConfig);
         // const analytics = getAnalytics(app); // Opsional, jika Anda membutuhkan analytics
 
-        // Inisialisasi Cloud Firestore dan dapatkan referensi ke layanan
-        const db = getFirestore(app);
+        // Inisialisasi Cloud Firestore dengan pengaturan cache
+        // const db = getFirestore(app); // Old way
+        const db = initializeFirestore(app, {
+          localCache: persistentLocalCache(/* settings */) // For IndexedDB persistence
+        });
+        console.log("Firestore initialized with persistence settings.");
 
-        // Mengaktifkan persistensi offline untuk Cloud Firestore
-        // Ini harus dipanggil sebelum operasi Firestore lainnya.
-        enableIndexedDbPersistence(db)
-            .then(() => {
-                console.log("Offline persistence enabled successfully.");
-            })
-            .catch((err) => {
-                if (err.code == 'failed-precondition') {
-                    console.warn("Offline persistence failed: Multiple tabs open or already enabled.");
-                } else if (err.code == 'unimplemented') {
-                    console.error("Offline persistence failed: Browser not supported.", err);
-                } else {
-                    console.error("Error enabling offline persistence:", err);
-                }
-            });
 
         let datas = [
             {

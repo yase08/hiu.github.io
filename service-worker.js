@@ -219,17 +219,23 @@ const urlsToCache = [
 ];
 
 // Saat install, cache semua file penting
+// Inside your 'install' event listener
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
+      .then(async (cache) => { // Make this function async
         console.log('Opened cache');
-        // The addAll call will fail if *any* URL in the list fails to fetch
-        return cache.addAll(urlsToCache);
+        for (const url of urlsToCache) {
+          try {
+            await cache.add(url); // await each add operation
+          } catch (error) {
+            console.error('Failed to cache:', url, error);
+            // Decide if you want to stop or continue
+          }
+        }
       })
       .catch(error => {
-          console.error('Cache addAll failed:', error);
-          // You might want to handle this error, e.g., show a message to the user
+          console.error('Cache open failed:', error);
       })
   );
 });
