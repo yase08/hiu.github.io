@@ -1,43 +1,44 @@
-const CACHE_NAME = 'my-app-cache-v1';
+const CACHE_NAME = 'my-app-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/detail/index.html',
+  '/detail/index.html', // Include the detail page
   '/manifest.json',
-  '/assets/.DS_Store',
+  // Removed '/assets/.DS_Store', as it's a system file
   '/assets/css/bootstrap/bootstrap-grid.css',
-  '/assets/css/bootstrap/bootstrap-grid.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-grid.css.map',
   '/assets/css/bootstrap/bootstrap-grid.min.css',
-  '/assets/css/bootstrap/bootstrap-grid.min.css.map',
-  '/assets/css/bootstrap/bootstrap-grid.rtl.css',
-  '/assets/css/bootstrap/bootstrap-grid.rtl.css.map',
-  '/assets/css/bootstrap/bootstrap-grid.rtl.min.css',
-  '/assets/css/bootstrap/bootstrap-grid.rtl.min.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-grid.min.css.map',
+  '/assets/css/bootstrap/bootstrap-grid.rtl.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-grid.rtl.css.map',
+  '/assets/css/bootstrap/bootstrap-grid.rtl.min.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-grid.rtl.min.css.map',
   '/assets/css/bootstrap/bootstrap-reboot.css',
-  '/assets/css/bootstrap/bootstrap-reboot.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-reboot.css.map',
   '/assets/css/bootstrap/bootstrap-reboot.min.css',
-  '/assets/css/bootstrap/bootstrap-reboot.min.css.map',
-  '/assets/css/bootstrap/bootstrap-reboot.rtl.css',
-  '/assets/css/bootstrap/bootstrap-reboot.rtl.css.map',
-  '/assets/css/bootstrap/bootstrap-reboot.rtl.min.css',
-  '/assets/css/bootstrap/bootstrap-reboot.rtl.min.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-reboot.min.css.map',
+  '/assets/css/bootstrap/bootstrap-reboot.rtl.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-reboot.rtl.css.map',
+  '/assets/css/bootstrap/bootstrap-reboot.rtl.min.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-reboot.rtl.min.css.map',
   '/assets/css/bootstrap/bootstrap-utilities.css',
-  '/assets/css/bootstrap/bootstrap-utilities.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-utilities.css.map',
   '/assets/css/bootstrap/bootstrap-utilities.min.css',
-  '/assets/css/bootstrap/bootstrap-utilities.min.css.map',
-  '/assets/css/bootstrap/bootstrap-utilities.rtl.css',
-  '/assets/css/bootstrap/bootstrap-utilities.rtl.css.map',
-  '/assets/css/bootstrap/bootstrap-utilities.rtl.min.css',
-  '/assets/css/bootstrap/bootstrap-utilities.rtl.min.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap-utilities.min.css.map',
+  '/assets/css/bootstrap/bootstrap-utilities.rtl.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-utilities.rtl.css.map',
+  '/assets/css/bootstrap/bootstrap-utilities.rtl.min.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap-utilities.rtl.min.css.map',
   '/assets/css/bootstrap/bootstrap.css',
-  '/assets/css/bootstrap/bootstrap.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap.css.map',
   '/assets/css/bootstrap/bootstrap.min.css',
-  '/assets/css/bootstrap/bootstrap.min.css.map',
-  '/assets/css/bootstrap/bootstrap.rtl.css',
-  '/assets/css/bootstrap/bootstrap.rtl.css.map',
-  '/assets/css/bootstrap/bootstrap.rtl.min.css',
-  '/assets/css/bootstrap/bootstrap.rtl.min.css.map',
+  // Removed '/assets/css/bootstrap/bootstrap.min.css.map',
+  '/assets/css/bootstrap/bootstrap.rtl.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap.rtl.css.map',
+  '/assets/css/bootstrap/bootstrap.rtl.min.css', // Check if this file exists and is needed
+  // Removed '/assets/css/bootstrap/bootstrap.rtl.min.css.map',
   '/assets/css/style.css',
+  // Add other assets like fonts if used via @font-face and are local
   '/assets/fonts/ProximaNova-Black.ttf',
   '/assets/fonts/ProximaNova-Bold.otf',
   '/assets/fonts/ProximaNova-Bold.ttf',
@@ -50,6 +51,7 @@ const urlsToCache = [
   '/assets/fonts/ProximaNova-Semibold.ttf',
   '/assets/fonts/ProximaNova-ThinIt.ttf',
   '/assets/fonts/proximanovaexcn-medium.otf',
+  // Card Menu Icons - Check if all these exist
   '/assets/img/01.png',
   '/assets/img/02.png',
   '/assets/img/03.png',
@@ -88,7 +90,7 @@ const urlsToCache = [
   '/assets/img/card-menu/06.png',
   '/assets/img/card-menu/07.png',
   '/assets/img/card-menu/sub-menu/1-1.png',
-  '/assets/img/card-menu/sub-menu/1-10.png',
+  '/assets/img/card-menu/sub-menu/1-10.png', // Check if this file exists
   '/assets/img/card-menu/sub-menu/1-2.png',
   '/assets/img/card-menu/sub-menu/1-3.png',
   '/assets/img/card-menu/sub-menu/1-4.png',
@@ -113,8 +115,9 @@ const urlsToCache = [
   '/assets/img/card-menu/sub-menu/5-1.png',
   '/assets/img/card-menu/sub-menu/5-2.png',
   '/assets/img/card-menu/sub-menu/6-1.png',
+  // Content Images/Videos/Sliders (based on your datas array) - Check if all these exist
   '/assets/img/content/1.jpg',
-  '/assets/img/content/2. Siklus hidup hiu paus.png',
+  '/assets/img/content/2. Siklus hidup hiu paus.png', // Check for spaces or special characters in filenames
   '/assets/img/content/2.jpg',
   '/assets/img/content/2.png',
   '/assets/img/content/3.jpg',
@@ -126,7 +129,7 @@ const urlsToCache = [
   '/assets/img/content/ancaman-hiu-paus.png',
   '/assets/img/content/cara-makan-en.png',
   '/assets/img/content/cara-makan-id.png',
-  '/assets/img/content/Default.mp4',
+  '/assets/img/content/Default.mp4', // Check capitalization
   '/assets/img/content/default.png',
   '/assets/img/content/distribusi-en.gif',
   '/assets/img/content/distribusi-eng.png',
@@ -172,7 +175,7 @@ const urlsToCache = [
   '/assets/img/content/wisata.png',
   '/assets/img/default-bg.png',
   '/assets/img/default.gif',
-  '/assets/img/Default.mp4',
+  '/assets/img/Default.mp4', // Check capitalization
   '/assets/img/header.png',
   '/assets/img/hiu-01.png',
   '/assets/img/informasi-ekosistem-laut.png',
@@ -200,19 +203,19 @@ const urlsToCache = [
   '/assets/img/sains.png',
   '/assets/img/teluk-saleh.png',
   '/assets/img/underwater-bg.jpg',
-  '/assets/js/bootstrap.bundle.js',
-  '/assets/js/bootstrap.bundle.js.map',
+  '/assets/js/bootstrap.bundle.js', // Check if this file exists and is needed
+  // Removed '/assets/js/bootstrap.bundle.js.map',
   '/assets/js/bootstrap.bundle.min.js',
-  '/assets/js/bootstrap.bundle.min.js.map',
-  '/assets/js/bootstrap.esm.js',
-  '/assets/js/bootstrap.esm.js.map',
-  '/assets/js/bootstrap.esm.min.js',
-  '/assets/js/bootstrap.esm.min.js.map',
-  '/assets/js/bootstrap.js',
-  '/assets/js/bootstrap.js.map',
-  '/assets/js/bootstrap.min.js',
-  '/assets/js/bootstrap.min.js.map',
-  '/assets/js/websocket.js'
+  // Removed '/assets/js/bootstrap.bundle.min.js.map',
+  '/assets/js/bootstrap.esm.js', // Check if this file exists and is needed
+  // Removed '/assets/js/bootstrap.esm.js.map',
+  '/assets/js/bootstrap.esm.min.js', // Check if this file exists and is needed
+  // Removed '/assets/js/bootstrap.esm.min.js.map',
+  '/assets/js/bootstrap.js', // Check if this file exists and is needed
+  // Removed '/assets/js/bootstrap.js.map',
+  '/assets/js/bootstrap.min.js', // Check if this file exists and is needed
+  // Removed '/assets/js/bootstrap.min.js.map',
+  '/assets/js/websocket.js' // Check if this file exists
 ];
 
 // Saat install, cache semua file penting
@@ -221,7 +224,12 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
+        // The addAll call will fail if *any* URL in the list fails to fetch
         return cache.addAll(urlsToCache);
+      })
+      .catch(error => {
+          console.error('Cache addAll failed:', error);
+          // You might want to handle this error, e.g., show a message to the user
       })
   );
 });
@@ -241,8 +249,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// 
-
+//
 // Saat activate, hapus cache lama
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
